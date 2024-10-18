@@ -5,12 +5,13 @@ body, html {
     padding: 0;
     height: 100%;
     width: 100%;
-    background-color: #f4f4f9;
+    /* background-color: #f4f4f9; */
+    background-image: url('images/b.jpg'); /* Update with the image path */
   }
   
   /* Full-screen background styling */
   full-page-background {
-    background-image: url('/b.jpg'); /* Update with the image path */
+    background-image: url('images/'); /* Update with the image path */
     background-size: cover;
     background-position: center;
     height: 100vh;
