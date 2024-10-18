@@ -1,0 +1,110 @@
+/* Global styling */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('/digital-health-concept_24908-58320.jpg'); /* Background image path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+  }
+  
+  .container {
+    background-color: rgba(255, 255, 255, 0.9); /* Transparent background for the content */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 900px;
+    margin: auto;
+    margin-top: 50px;
+  }
+  
+  .welcome-section {
+    text-align: center;
+    margin-top: 150px; /* Center the welcome message vertically */
+    margin-bottom: 50px; /* Add some space after the welcome section */
+  }
+  
+  .welcome-section h1 {
+    font-size: 3rem;
+    color: #333;
+  }
+  
+  .welcome-section p {
+    font-size: 1.2rem;
+    color: #555;
+  }
+  
+  /* Styling for the drug interaction checker */
+  .interaction-checker {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .interaction-checker div {
+    width: 45%; /* Ensure both containers are the same size */
+  }
+  
+  /* Set consistent width and height for both input and textarea fields */
+  textarea, input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #CCC;
+    height: 150px; /* Set the same height for both fields */
+    box-sizing: border-box; /* Include padding and borders in the element's total size */
+  }
+  
+  /* Styling the button */
+  button {
+    padding: 12px 30px;
+    background-color: #28a745; /* Green button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #218838; /* Darker green on hover */
+  }
+  
+  /* Card styling for warning and results */
+  .card-warning {
+    margin-top: 20px;
+    background-color: #F8D7DA; /* Light red for warning background */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Navbar styling */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #141414;
+    padding: 20px;
+  }
+  
+  .navbar a {
+    color: #FFF;
+    text-decoration: none;
+    margin: 0 15px;
+  }
+  
+  .navbar a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Ensure the page container is centered */
+  .page-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  

@@ -4,60 +4,36 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSignUp = (e) => {
     e.preventDefault();
-    console.log('Signing up with:', email, password);
+    // Add sign-up logic here
+    alert("Sign up successful!");
   };
 
   return (
-    <div style={styles.pageContainer}>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={styles.input}
-        />
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-        />
-        <button type="submit" style={styles.button}>Sign Up</button>
+    <div className="signup-container">
+      <h2>Sign Up</h2>
+      <form onSubmit={handleSignUp}>
+        <label>
+          Email:
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );
-};
-
-const styles = {
-  pageContainer: {
-    textAlign: 'center',
-    color: '#fff',
-    marginTop: '100px',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '300px',
-    margin: '0 auto',
-  },
-  input: {
-    padding: '10px',
-    margin: '10px 0',
-    fontSize: '16px',
-  },
-  button: {
-    padding: '10px',
-    fontSize: '16px',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    cursor: 'pointer',
-  },
 };
 
 export default SignUp;

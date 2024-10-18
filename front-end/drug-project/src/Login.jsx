@@ -1,63 +1,41 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    console.log('Logging in with:', email, password);
+    // Add authentication logic here
+    navigate('/home'); // Redirect to home after login
   };
 
   return (
-    <div style={styles.pageContainer}>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={styles.input}
-        />
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-        />
-        <button type="submit" style={styles.button}>Login</button>
+    <div className="login-container">
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <label>
+          Username or Access Card:
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <button type="submit">Log In</button>
       </form>
     </div>
   );
-};
-
-const styles = {
-  pageContainer: {
-    textAlign: 'center',
-    color: '#fff',
-    marginTop: '100px',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '300px',
-    margin: '0 auto',
-  },
-  input: {
-    padding: '10px',
-    margin: '10px 0',
-    fontSize: '16px',
-  },
-  button: {
-    padding: '10px',
-    fontSize: '16px',
-    backgroundColor: '#28a745',
-    color: '#fff',
-    border: 'none',
-    cursor: 'pointer',
-  },
 };
 
 export default Login;
