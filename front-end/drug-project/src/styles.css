@@ -11,10 +11,10 @@ body, html {
   
   /* Full-screen background styling */
   full-page-background {
-    background-image: url('images/'); /* Update with the image path */
+    /*background-image: url('images/'); /* Update with the image path */
     background-size: cover;
     background-position: center;
-    height: 100vh;
+    height: 250vh;
     width: 100vw;
     position: absolute;
     z-index: -1; /* Ensure the background stays behind all elements */
@@ -76,7 +76,7 @@ body, html {
   }
   
   /* Footer styling */
-  footer {
+  /* footer {
     background-color: #333;
     color: white;
     text-align: center;
@@ -84,5 +84,67 @@ body, html {
     position: absolute;
     width: 100vw;
     bottom: 0;
+  } */
+  footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    width: 100vw;
+    position: relative;
+    bottom: 0;
   }
   
+
+  /* Our Team Styling */
+.team-container {
+  text-align: center;
+  /* height: 5px; */
+  /* max-height: 1px; */
+  margin-top: 5rem;
+  padding: 1rem;
+}
+
+.team-members {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2rem; /* Add space between members */
+}
+
+.team-member {
+  max-width: 250px;
+  max-height: 900px;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.team-member img {
+  width: 40%;
+  height: auto;
+  border-radius: 50%;
+}
+
+.team-member h3 {
+  font-size: 1rem;
+  margin: 0.3rem 0;
+}
+
+.team-member p {
+  font-size: 1rem;
+  color: #666;
+}
+
+.team-member a {
+  color: #007bff;
+  text-decoration: none;
+  margin: 0 0.3rem;
+}
+
+.team-member a:hover {
+  text-decoration: underline;
+}

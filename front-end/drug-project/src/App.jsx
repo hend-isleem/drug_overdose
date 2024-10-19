@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Contact from './pages/Contact';
 import DrugInteractionChecker from './pages/DrugInteractionChecker';
+import OurTeam from './pages/OurTeam'; // Import the OurTeam page
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/drug-checker" element={<DrugInteractionChecker />} />
+          <Route path="/our-team" element={<OurTeam />} />
         </Routes>
         <Footer />
       </Router>
