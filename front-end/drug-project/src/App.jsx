@@ -7,28 +7,33 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Contact from './pages/Contact';
 import DrugInteractionChecker from './pages/DrugInteractionChecker';
-import OurTeam from './pages/OurTeam'; // Import the OurTeam page
+import OurTeam from './pages/OurTeam';
 
 function App() {
   return (
-    <div className="full-page-background"> {/* b.jpg */}
-      <Router>
+    <Router>
+      <div className="page-container">
         <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/drug-checker" element={<DrugInteractionChecker />} />
-          <Route path="/our-team" element={<OurTeam />} />
-        </Routes>
+        <div className="content-wrap">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/drug-checker" element={<DrugInteractionChecker />} />
+            <Route path="/our-team" element={<OurTeam />} />
+          </Routes>
+        </div>
         <Footer />
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 }
 
 export default App;
+
+
+
 
 
 
