@@ -140,10 +140,30 @@ footer {
 
 /* Footer styles */
 footer {
-  background-color: #333;
-  color: white;
+  background-color: NONE;
+  color:NONE;
   text-align: center;
   padding: 1rem;
   width: 100%;
   position: relative;
 }
+.center-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Takes the full viewport height */
+  text-align: center;
+  margin-top: -100px; /* Optional: Adjust this if there's extra space due to the header */
+}
+
+.center-text h1 {
+  font-size: 3rem; /* Adjust as per your requirement */
+  color: #333; /* Customize color */
+}
+
+.center-text p {
+  font-size: 1.5rem; /* Adjust as per your requirement */
+  color: #555; /* Customize color */
+}
+
