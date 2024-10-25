@@ -1,8 +1,12 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
+test("renders Drug Interaction Checker header", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const headerElement = screen.getByRole("heading", {
+    level: 1,
+    name: /Drug Interaction Checker/i,
+  });
+
+  expect(headerElement).toBeInTheDocument();
 });

@@ -1,10 +1,16 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { BrowserRouter as Router } from "react-router-dom";
 import MedicationInputForm from "./MedicationInputForm";
 
 describe("MedicationInputForm", () => {
   test("allows a user to add a drug to the list", () => {
-    render(<MedicationInputForm />);
+    render(
+      <Router>
+        <MedicationInputForm />
+      </Router>
+    );
+
     const input = screen.getByPlaceholderText("Enter a drug name");
     const addButton = screen.getByText("Add");
 
@@ -15,7 +21,12 @@ describe("MedicationInputForm", () => {
   });
 
   test("allows a user to remove a drug from the list", () => {
-    render(<MedicationInputForm />);
+    render(
+      <Router>
+        <MedicationInputForm />
+      </Router>
+    );
+
     const input = screen.getByPlaceholderText("Enter a drug name");
     const addButton = screen.getByText("Add");
 
@@ -29,7 +40,12 @@ describe("MedicationInputForm", () => {
   });
 
   test("allows a user to reset the drug list", () => {
-    render(<MedicationInputForm />);
+    render(
+      <Router>
+        <MedicationInputForm />
+      </Router>
+    );
+
     const input = screen.getByPlaceholderText("Enter a drug name");
     const addButton = screen.getByText("Add");
     const resetButton = screen.getByText("Start over");

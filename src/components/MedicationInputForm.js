@@ -68,9 +68,16 @@ const MedicationInputForm = () => {
         </div>
       )}
       <div style={buttonContainerStyle}>
-        <button onClick={handleCheckInteractions} style={checkButtonStyle}>
+        <button
+          onClick={handleCheckInteractions}
+          style={
+            drugList.length === 0 ? disabledCheckButtonStyle : checkButtonStyle
+          }
+          disabled={drugList.length === 0}
+        >
           Check Interactions
         </button>
+
         <button onClick={handleReset} style={resetButtonStyle}>
           Start over
         </button>
@@ -175,6 +182,14 @@ const resetButtonStyle = {
   border: "none",
   borderRadius: "4px",
   cursor: "pointer",
+};
+const disabledCheckButtonStyle = {
+  padding: "10px 20px",
+  backgroundColor: "#cccccc",
+  color: "#fff",
+  border: "none",
+  borderRadius: "4px",
+  cursor: "not-allowed",
 };
 
 export default MedicationInputForm;
