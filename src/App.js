@@ -1,7 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import MedicationInputForm from "./components/MedicationInputForm";
+import InteractionResults from "./components/InteractionResults";
 import Footer from "./components/Footer";
 
 function App() {
@@ -11,10 +12,14 @@ function App() {
         <Header />
         <div className="content" style={contentStyle}>
           <Routes>
-            <Route path="/input-medication" element={<MedicationInputForm />} />
             <Route
               path="/"
               element={<h2>Welcome to the Drug Interaction Checker</h2>}
+            />
+            <Route path="/input-medication" element={<MedicationInputForm />} />
+            <Route
+              path="/interaction-results"
+              element={<InteractionResults />}
             />
           </Routes>
         </div>
@@ -31,7 +36,7 @@ const appContainerStyle = {
 };
 
 const contentStyle = {
-  flex: 1, // This makes sure the content takes up the available space
+  flex: 1,
 };
 
 export default App;

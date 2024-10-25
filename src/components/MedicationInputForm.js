@@ -1,15 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const MedicationInputForm = () => {
   const [drugList, setDrugList] = useState([]);
   const [currentDrug, setCurrentDrug] = useState("");
+  const navigate = useNavigate(); // Initialize navigate function
 
-  // Handle input change
   const handleChange = (e) => {
     setCurrentDrug(e.target.value);
   };
 
-  // Add a new drug to the list
   const handleAddDrug = () => {
     if (currentDrug) {
       setDrugList([...drugList, currentDrug]);
@@ -17,19 +17,15 @@ const MedicationInputForm = () => {
     }
   };
 
-  // Remove a drug from the list
   const handleRemoveDrug = (index) => {
-    const newDrugList = drugList.filter((_, i) => i !== index);
-    setDrugList(newDrugList);
+    setDrugList(drugList.filter((_, i) => i !== index));
   };
 
-  // Submit to check interactions
   const handleCheckInteractions = () => {
     console.log("Checking interactions for:", drugList);
-    alert("Checking interactions!");
+    navigate("/interaction-results"); // Navigate to the results page
   };
 
-  // Reset the drug list
   const handleReset = () => {
     setDrugList([]);
   };
@@ -41,7 +37,6 @@ const MedicationInputForm = () => {
         Check interactions with multiple drugs, vaccines, supplements, alcohol,
         food, and diseases.
       </p>
-
       <div style={inputContainerStyle}>
         <input
           type="text"
@@ -54,7 +49,6 @@ const MedicationInputForm = () => {
           Add
         </button>
       </div>
-
       {drugList.length > 0 && (
         <div style={listContainerStyle}>
           <h3>Unsaved interactions list</h3>
@@ -73,7 +67,6 @@ const MedicationInputForm = () => {
           </ul>
         </div>
       )}
-
       <div style={buttonContainerStyle}>
         <button onClick={handleCheckInteractions} style={checkButtonStyle}>
           Check Interactions
@@ -85,7 +78,6 @@ const MedicationInputForm = () => {
     </div>
   );
 };
-
 // Styling
 const containerStyle = {
   width: "500px",
