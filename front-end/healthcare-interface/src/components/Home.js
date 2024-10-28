@@ -29,7 +29,8 @@ function Home() {
     </div>
   );
 }
-
+{/* <h1 style={{ textAlign: 'center', marginTop: '20px' }}>Welcome to Our Healthcare System</h1>
+<p style={{ textAlign: 'center', color: 'gray' }}>Check drug interactions easily with our tool.</p> */}
 
 export default Home;
 
