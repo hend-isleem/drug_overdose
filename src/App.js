@@ -5,6 +5,7 @@ import MedicationInputForm from "./components/MedicationInputForm";
 import InteractionResults from "./components/InteractionResults";
 import Footer from "./components/Footer";
 import RegisterForm from "./components/Register";
+import LoginForm from "./components/Login";
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
               path="/interaction-results"
               element={<InteractionResults />}
             />
-            <Route path="/register" element={<RegisterForm />} />{" "}
+            <Route path="/register" element={<RegisterForm />} />
+            <Route path="/login" element={<LoginForm />} />
           </Routes>
         </div>
         <Footer />

@@ -6,7 +6,6 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     console.log(`Searching for: ${searchQuery}`);
-    // Add search functionality here
   };
 
   return (
@@ -42,7 +41,9 @@ const Header = () => {
           Register
         </a>
 
-        <button style={buttonStyle}>Login</button>
+        <a href="/login" style={linkStyle}>
+          Login
+        </a>
       </div>
     </header>
   );
