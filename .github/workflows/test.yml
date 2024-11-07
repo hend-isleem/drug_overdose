@@ -32,7 +32,16 @@ jobs:
       
       # Step 3: Set up environment variables using GitHub Secrets
       - name: Set up environment variables
-        run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV && echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV && echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV && echo "REDIS_PASSWORD"=${{ secrets.REDIS_PASSWORD}}" >> $GITHUB_ENV && echo "JWT_ACCESS_EXPIRATION_HOURS"=${{ secrets.JWT_ACCESS_EXPIRATION_HOURS}}" >> $GITHUB_ENV && echo "JWT_REFRESH_EXPIRATION_MONTHS"=${{ secrets.JWT_REFRESH_EXPIRATION_MONTHS}}" >> $GITHUB_ENV && echo "JWT_SECRET"=${{ secrets.JWT_SECRET}}" >> $GITHUB_ENV && echo "REDIS_HOST=localhost" >> $GITHUB_ENV && echo "REDIS_PORT=6379" >> $GITHUB_ENV 
+        run: |
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV 
+          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV 
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV 
+          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD}}" >> $GITHUB_ENV 
+          echo "JWT_ACCESS_EXPIRATION_HOURS=${{ secrets.JWT_ACCESS_EXPIRATION_HOURS}}" >> $GITHUB_ENV  
+          echo "JWT_REFRESH_EXPIRATION_MONTHS=${{ secrets.JWT_REFRESH_EXPIRATION_MONTHS}}" >> $GITHUB_ENV  
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET}}" >> $GITHUB_ENV 
+          echo "REDIS_HOST=localhost" >> $GITHUB_ENV 
+          echo "REDIS_PORT=6379" >> $GITHUB_ENV 
 
       - name: Install Dependencies
         run: cd backend && npm i
