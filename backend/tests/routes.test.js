@@ -27,5 +27,10 @@ describe('Invalid route', function() {
             done();
         });
     });
+
+    after(function(done) {
+        // Close your server or connections after tests
+        app.close(done);
+    });
 });
 
