@@ -22,7 +22,7 @@ jobs:
           node-version: 20.17.0
           
       - name: Install Dependencies
-        run: cd backend && npm ci
+        run: cd backend && npm i
       - name: Run tests
         run: cd backend && npm test
         
