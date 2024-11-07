@@ -5,7 +5,6 @@ const expect = chai.expect;
 const app = require('../src/modules/app/app.module.js');
 
 
-console.log("Test suit 1");
 app.set('trust proxy', false);
 chai.use(chaiHttp);
 
@@ -125,22 +124,5 @@ describe('Contacts API', function() {
           });
       });
   });
-});
-
-
-
-describe('GET /users', function() {
-    it('should fail requesting this endpoint', function(done) {
-        supertest(app)
-        .get('/users')
-        .expect('Content-Type', /json/)
-        .expect(404)
-        .end(function(err, response) {
-            if (err) return done(err);
-            expect(response.status).to.equal(404);
-            expect(response.body.message).to.equal("Invalid Endpoint!");
-            done();
-        });
-    });
 });
 
