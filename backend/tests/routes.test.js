@@ -14,7 +14,7 @@ describe('Invalid route', function() {
         .get('/users')
         .expect('Content-Type', /json/)
         .expect(404)
-        .end(function(err, response) {
+        .end(function(error, response) {
             if (error) {
                 if (response && response.status === 404) {
                   done(); // Test passes coz 404 is the expected response
