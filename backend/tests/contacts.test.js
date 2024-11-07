@@ -97,7 +97,6 @@ describe('Contacts API', function() {
             expect(res.body).to.have.property('contactEmail').to.equal(randomeContact.contactEmail);
             done();
         });
-        done();
       });
   });
 
