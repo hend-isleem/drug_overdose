@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Process login here (e.g., API call)
-    console.log('Login with:', email, password);
+    if (email && password) {
+      onLogin(email, password); // Callback function when form is submitted
+    }
   };
 
   return (
@@ -37,3 +38,5 @@ function Login() {
 }
 
 export default Login;
+
+
