@@ -31,7 +31,18 @@ const validate = ajv.compile(envVarsSchema);
 const valid = validate(process.env);
 console.log("pizza");
 console.log(valid);
-if (!valid) throw new Error(ajv.errorsText(validate.errors, { separator: '\n' }));
+if (!valid) {
+  console.log("Validation failed. Errors:");
+  validate.errors.forEach((error) => {
+    console.log(`- ${error.message}`);
+    console.log(`  Data path: ${error.instancePath}`);
+    console.log(`  Expected type: ${error.params.type}`);
+    if (error.params.additionalProperty) {
+      console.log(`  Invalid property: ${error.params.additionalProperty}`);
+    }
+  });
+  throw new Error(ajv.errorsText(validate.errors, { separator: '\n' }));
+}
 
 const config = {
   timezone: process.env.TZ,
