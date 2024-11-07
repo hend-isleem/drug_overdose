@@ -19,7 +19,19 @@ jobs:
           - 6379:6379             # Expose Redis on port 6379
         options: --health-cmd "redis-server --version" --health-interval 5s --health-timeout 5s --health-retries 3
 
+    env:
+      TZ: ${{ secrets.TZ }}
+      PORT: 3000
+      NODE_ENV: development
+      MONGODB_URL: ${{ secrets.MONGO_URI }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET}}
+      JWT_ACCESS_EXPIRATION_HOURS: ${{ secrets.JWT_ACCESS_EXPIRATION_HOURS}}
+      JWT_REFRESH_EXPIRATION_MONTHS: ${{ secrets.JWT_REFRESH_EXPIRATION_MONTHS}}
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD}}
 
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,21 +40,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.17.0
-
-      
-      # Step 3: Set up environment variables using GitHub Secrets
-      - name: Set up environment variables
-        run: |
-          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV 
-          echo "TZ=${{ secrets.TZ }}" >> $GITHUB_ENV 
-          echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV 
-          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> $GITHUB_ENV 
-          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD}}" >> $GITHUB_ENV 
-          echo "JWT_ACCESS_EXPIRATION_HOURS=${{ secrets.JWT_ACCESS_EXPIRATION_HOURS}}" >> $GITHUB_ENV  
-          echo "JWT_REFRESH_EXPIRATION_MONTHS=${{ secrets.JWT_REFRESH_EXPIRATION_MONTHS}}" >> $GITHUB_ENV  
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET}}" >> $GITHUB_ENV 
-          echo "REDIS_HOST=localhost" >> $GITHUB_ENV 
-          echo "REDIS_PORT=6379" >> $GITHUB_ENV 
 
       - name: Install Dependencies
         run: cd backend && npm i
