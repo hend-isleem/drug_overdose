@@ -5,13 +5,12 @@ on:
     branches: ["main", "sali"]
   push:
     branches: ["main", "sali"]
-
   workflow_dispatch:
 
 jobs:
   tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 10 # Timeout after 10 minutes
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -23,9 +22,12 @@ jobs:
           node-version: 21.6.2
 
       - name: Install Dependencies
-        run: npm i && npm start
-      - name: Run tests
-        run: npm test || exit 0
+        run: npm install
+
+      - name: Run Tests
+        run: npm test -- --watchAll=false
+
+      - name: Build Frontend
 
       - name: Final step (marking success or failure)
         if: success()

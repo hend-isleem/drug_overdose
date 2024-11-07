@@ -14,7 +14,7 @@ describe("RegisterForm", () => {
     const usernameInput = screen.getByLabelText(/Username:/i);
     const emailInput = screen.getByLabelText(/Email:/i);
     const passwordInput = screen.getByLabelText(/Password:/i);
-    // Modify to get the button more precisely
+   
     const registerButton = screen.getByRole("button", { name: /Register/i });
 
     expect(usernameInput).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe("RegisterForm", () => {
     const usernameInput = screen.getByLabelText(/Username:/i);
     const emailInput = screen.getByLabelText(/Email:/i);
     const passwordInput = screen.getByLabelText(/Password:/i);
-    // Again, target the register button by its role
+    
     const registerButton = screen.getByRole("button", { name: /Register/i });
 
     fireEvent.change(usernameInput, { target: { value: "testuser" } });
@@ -41,7 +41,7 @@ describe("RegisterForm", () => {
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(registerButton);
 
-    // Assert that the localStorage contains the registered user data
+   
     expect(localStorage.getItem("user")).toContain("testuser");
   });
 });
