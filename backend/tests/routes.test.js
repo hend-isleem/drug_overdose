@@ -17,7 +17,7 @@ describe('Invalid route', function() {
         .end(function(error, response) {
             if (error) {
                 if (response && response.status === 404) {
-                  done(); // Test passes coz 404 is the expected response
+                  done();
                 } else {
                   return done(error); 
                 }

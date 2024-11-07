@@ -14,13 +14,12 @@ describe('Contacts API', function() {
   let randomeContact_2;
 
   before(function(done) {
-    this.timeout(10000);  // Set a timeout for async operations
+    this.timeout(10000);  
     supertest(app)
       .post('/v1/auth/admin-login')
       .send({ email: 'admin@sesa1.com', password: 'password1' })
       .end((err, res) => {
         authToken = res.body.tokens.access.token;
-        // console.log(">>>> ", authToken);
         done();
       });
   });
@@ -118,13 +117,12 @@ describe('Contacts API', function() {
           .end((error, response) => {
             if (error) {
               if (response && response.status === 404) {
-                done(); // Test passes coz 404 is the expected response
+                done();
               } else {
                 return done(error); 
               }
             }
             expect(response.status).to.equal(404);
-            // console.log(response);
             expect(response.body.message).to.equal("Not found!");
             done();
           });
