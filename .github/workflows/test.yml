@@ -23,7 +23,7 @@ jobs:
       TZ: ${{ secrets.TZ }}
       PORT: 3000
       NODE_ENV: development
-      MONGODB_URL: ${{ secrets.MONGO_URI }}
+      MONGODB_URL: ${{ secrets.MONGODB_URL }}
       JWT_SECRET: ${{ secrets.JWT_SECRET}}
       JWT_ACCESS_EXPIRATION_HOURS: ${{ secrets.JWT_ACCESS_EXPIRATION_HOURS}}
       JWT_REFRESH_EXPIRATION_MONTHS: ${{ secrets.JWT_REFRESH_EXPIRATION_MONTHS}}
