@@ -97,6 +97,7 @@ describe('Contacts API', function() {
             expect(res.body).to.have.property('contactEmail').to.equal(randomeContact.contactEmail);
             done();
         });
+        done();
       });
   });
 
@@ -130,5 +131,11 @@ describe('Contacts API', function() {
           });
       });
   });
+
+  after(function(done) {
+    // Close your server or connections after tests
+    app.close(done);
+  });
+
 });
 
