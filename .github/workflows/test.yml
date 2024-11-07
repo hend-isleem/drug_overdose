@@ -20,7 +20,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.17.0
-          
+      
+      
+      # Step 3: Set up environment variables using GitHub Secrets
+      - name: Set up environment variables
+        run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV && echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV && echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+
       - name: Install Dependencies
         run: cd backend && npm i
       - name: Run tests
