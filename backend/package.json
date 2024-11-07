@@ -7,9 +7,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
-    "oldtest": "mocha --reporter spec './tests/**/*.test.js'",
-    "test": "mocha './tests/**/*.test.js'",
-    "jesttest": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "mocha --exit './tests/**/*.test.js'",
     "lint": "eslint '**/*.js'",
     "lint:fix": "eslint --fix '**/*.js'",
     "prettier": "prettier --check '**/*.{js,json}'",
