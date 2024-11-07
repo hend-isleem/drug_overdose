@@ -29,6 +29,8 @@ const envVarsSchema = {
 
 const validate = ajv.compile(envVarsSchema);
 const valid = validate(process.env);
+console.log("pizza");
+console.log(valid);
 if (!valid) throw new Error(ajv.errorsText(validate.errors, { separator: '\n' }));
 
 const config = {
