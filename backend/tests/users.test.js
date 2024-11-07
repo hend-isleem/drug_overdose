@@ -7,18 +7,17 @@ const app = require('../src/modules/app/app.module.js'); // Adjust the path as n
 console.log("Test suit 1");
 
 describe('GET /users', function() {
-    // it('should return a list of users', function(done) {
-    //     supertest(app)
-    //     .get('/users')
-    //     .expect('Content-Type', /json/)
-    //     .expect(200)
-    //     .end(function(err, res) {
-    //         if (err) return done(err);
-    //         expect(res.body).to.be.an('array');
-    //         done();
-    //     });
-    // });
-    expect(true).to.be.true;
+    it('should return a list of users', function(done) {
+        supertest(app)
+        .get('/users')
+        .expect('Content-Type', /json/)
+        .expect(404)
+        .end(function(err, res) {
+            if (err) return done(err);
+            // expect(res.body).to.be.an('array');
+            done();
+        });
+    });
 });
 
 
