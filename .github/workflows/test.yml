@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: ['main', 'back-end', 'adding_tests_backend']
   push:
-    branches: ['main']
+    branches: ['main', 'adding_tests_backend']
 
   workflow_dispatch:
 
