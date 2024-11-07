@@ -131,11 +131,5 @@ describe('Contacts API', function() {
           });
       });
   });
-
-  after(function(done) {
-    // Close your server or connections after tests
-    app.close(done);
-  });
-
 });
 
