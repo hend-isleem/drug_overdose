@@ -1,33 +1,26 @@
-// const supertest = require('supertest');
-// const chai = require('chai');
-// const expect = chai.expect;
-// const app = require('../src/modules/app'); // Adjust the path as necessary to import your Express app
+const supertest = require('supertest');
+const chai = require('chai');
+const expect = chai.expect;
+const app = require('../src/modules/app/app.module.js'); // Adjust the path as necessary to import your Express app
 
-// import supertest from 'supertest';
-// import chai from 'chai';
-// const expect = chai.expect;
-// import app from '../src/modules/app';
 
-(async () => {
-    const { expect } = await import('chai');  // Use dynamic import
-    const request = (await import('supertest')).default;
-    const app = (await import('../src/modules/app/app.module.js')).default;
+console.log("Test suit 1");
 
-    describe('GET /users', function() {
-        // it('should return a list of users', function(done) {
-        //     supertest(app)
-        //     .get('/users')
-        //     .expect('Content-Type', /json/)
-        //     .expect(200)
-        //     .end(function(err, res) {
-        //         if (err) return done(err);
-        //         expect(res.body).to.be.an('array');
-        //         done();
-        //     });
-        // });
-        expect(true).to.be.true;
-    });
-})();
+describe('GET /users', function() {
+    // it('should return a list of users', function(done) {
+    //     supertest(app)
+    //     .get('/users')
+    //     .expect('Content-Type', /json/)
+    //     .expect(200)
+    //     .end(function(err, res) {
+    //         if (err) return done(err);
+    //         expect(res.body).to.be.an('array');
+    //         done();
+    //     });
+    // });
+    expect(true).to.be.true;
+});
+
 
 
 
