@@ -1,27 +1,67 @@
+// Login.test.js
+
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
-import Login from './Login'; // Adjust the import path as necessary
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import Login from './Login';
 
-describe('Login Component', () => {
-  test('successful form submission with email and password', () => {
-    const { getByLabelText, getByText } = render(<Login />);
-    fireEvent.change(getByLabelText('Email:'), { target: { value: 'test@example.com' } });
+describe('Login Component Tests', () => {
+  test('successful login', async () => {
+    const mockOnLogin = jest.fn();
+    const { getByLabelText, getByRole } = render(<Login onLogin={mockOnLogin} />);
+    
+    fireEvent.change(getByLabelText('Email:'), { target: { value: 'user@example.com' } });
     fireEvent.change(getByLabelText('Password:'), { target: { value: 'password123' } });
-    fireEvent.submit(getByText('Login'));
-
-    // Check console log for output (mock console.log to test this)
-    const consoleSpy = jest.spyOn(console, 'log');
-    expect(consoleSpy).toHaveBeenCalledWith('Login with:', 'test@example.com', 'password123');
+    fireEvent.click(getByRole('button', { name: 'Login' }));
+    
+    await waitFor(() => {
+      expect(mockOnLogin).toHaveBeenCalledWith('user@example.com', 'password123');
+    });
   });
 
-  test('form submission fails without password', () => {
-    const { getByLabelText, getByText, getByRole } = render(<Login />);
-    fireEvent.change(getByLabelText('Email:'), { target: { value: 'test@example.com' } });
-    // Do not change the password input to simulate failing scenario
-    fireEvent.submit(getByText('Login'));
+  test('login fails without email and password', async () => {
+    const mockOnLogin = jest.fn();
+    const { getByRole } = render(<Login onLogin={mockOnLogin} />);
+    
+    fireEvent.click(getByRole('button', { name: 'Login' }));
+    
+    await waitFor(() => {
+      expect(mockOnLogin).not.toHaveBeenCalled();
+    });
+  });
+});
+w
+import React from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import Login from './Login';
 
-    // Check if validation or error message appears (assuming you have error handling for empty fields)
-    // For demonstration, assuming an error element appears
-    expect(screen.queryByText('Password is required')).toBeInTheDocument();
+describe('Login Component Tests', () => {
+  test('successful login', async () => {
+    const mockOnLogin = jest.fn();
+    const { getByLabelText, getByRole } = render(<Login onLogin={mockOnLogin} />);
+    
+    fireEvent.change(getByLabelText('Email:'), { target: { value: 'user@example.com' } });
+    fireEvent.change(getByLabelText('Password:'), { target: { value: 'password123' } });
+    fireEvent.click(getByRole('button', { name: 'Login' }));
+    
+    await waitFor(() => {
+      expect(mockOnLogin).toHaveBeenCalledWith('user@example.com', 'password123');
+    });
+  });
+
+  test('login fails without email and password', async () => {
+    const mockOnLogin = jest.fn();
+    const { getByRole } = render(<Login onLogin={mockOnLogin} />);
+    
+    fireEvent.click(getByRole('button', { name: 'Login' }));
+    
+    await waitFor(() => {
+      expect(mockOnLogin).not.toHaveBeenCalled();
+    });
+  });
+
+  // Snapshot test
+  test('Login component snapshot', () => {
+    const { asFragment } = render(<Login onLogin={jest.fn()} />);
+    expect(asFragment()).toMatchSnapshot();
   });
 });
