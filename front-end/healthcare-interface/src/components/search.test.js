@@ -38,6 +38,6 @@ describe('Search Component Tests', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 });
-w
+
 
 
