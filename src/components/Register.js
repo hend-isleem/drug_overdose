@@ -8,6 +8,26 @@ const RegisterForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Basic validation
+    if (!username || !email || !password) {
+      alert("Please enter all required fields.");
+      return;
+    }
+
+    // Simple email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    // Simulate "username taken" check
+    if (username === "existingUser") {
+      alert("Username is already taken.");
+      return;
+    }
+
+    // If all validations pass, store the user data
     const userData = {
       username,
       email,
