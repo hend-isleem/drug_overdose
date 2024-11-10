@@ -1,9 +1,11 @@
-const contactSchema = require('../modules/v1/contacts/contacts.schema');
+const codeSchema = require('../modules/v1/auth/codes/codes.schema');
+const drugSchema = require('../modules/v1/drugs/drugs.schema');
 const tokenSchema = require('../modules/v1/auth/tokens/tokens.schema');
 const userSchema = require('../modules/v1/users/users.schema');
 
 const collectionConstant = {
-  contacts: contactSchema,
+  codes: codeSchema,
+  drugs: drugSchema,
   tokens: tokenSchema,
   users: userSchema,
 };
