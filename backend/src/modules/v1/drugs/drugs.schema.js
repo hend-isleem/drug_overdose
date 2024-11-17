@@ -1,6 +1,6 @@
 const drugSchema = {
   name: { type: 'string', transform: ['trim'] },
-  drugs: { type: 'array', items: { type: 'string', transform: ['trim'] } },
+  drugs: { type: 'array', items: { type: 'string', transform: ['trim'] }, required: true },
   interactions: {
     type: 'array',
     items: {

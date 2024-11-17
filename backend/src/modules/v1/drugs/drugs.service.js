@@ -1,7 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-console */
 const _ = require('lodash');
 const httpStatus = require('http-status');
 const { ObjectId } = require('mongodb');
@@ -19,11 +15,9 @@ const getDrugInteractions = async (inputDrugs) => {
     await page.goto('https://www.drugs.com/interaction/list/', { waitUntil: 'commit' });
     // Function to add a drug and wait for the page to refresh
     async function addDrug(drugName) {
-      console.log(`Adding ${drugName}`);
       await page.type('#livesearch-interaction', drugName);
       await page.keyboard.press('Enter'); // Press Enter to select the drug
       await page.waitForTimeout(500); // Wait for the drug to be added and processed
-      console.log(`${drugName} added successfully.`);
     }
     // Add the drugs
     for (const drug of inputDrugs) {
@@ -69,6 +63,10 @@ const getDrugInteractions = async (inputDrugs) => {
 };
 
 async function create(createDto) {
+  createDto.drugs = createDto.drugs.sort();
+  createDto.name = createDto.drugs.join(', ');
+  const result = await dalService.readMany(collectionName, { name: createDto.name }, {});
+  if (result.documents.length) return result.documents[0];
   createDto.interactions = await getDrugInteractions(createDto.drugs);
   return dalService.createOne(collectionName, createDto);
 }

@@ -4,8 +4,8 @@ const catchAsync = require('../../../utils/catchAsync');
 const drugService = require('./drugs.service');
 
 const create = catchAsync(async (req, res) => {
-  await drugService.create(req.body);
-  res.status(httpStatus.NO_CONTENT).send();
+  const drug = await drugService.create(req.body);
+  res.send(drug);
 });
 
 const query = catchAsync(async (req, res) => {
