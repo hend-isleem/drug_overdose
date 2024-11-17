@@ -1,4 +1,4 @@
-const regexConstant = require('../../../constants/regexes.constant');
+const regexConstant = require('../../../constants/regexes.constant')
 
 const register = {
   body: {
@@ -7,19 +7,18 @@ const register = {
     properties: {
       email: { type: 'string', format: 'email', transform: ['trim', 'toLowerCase'] },
       password: { type: 'string', pattern: regexConstant.password.source },
-      name: { type: 'string' },
-      newsletter: { type: 'boolean' },
+      name: { type: 'string' }
     },
     allRequired: true,
     additionalProperties: false,
     errorMessage: {
       properties: {
         password:
-          'must be of minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.',
-      },
-    },
-  },
-};
+          'must be of minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.'
+      }
+    }
+  }
+}
 
 const login = {
   body: {
@@ -27,85 +26,68 @@ const login = {
     minProperties: 1,
     properties: {
       email: { type: 'string', format: 'email', transform: ['trim', 'toLowerCase'] },
-      password: { type: 'string' },
+      password: { type: 'string' }
     },
     allRequired: true,
-    additionalProperties: false,
-  },
-};
+    additionalProperties: false
+  }
+}
 
 const logout = {
   body: {
     type: 'object',
     minProperties: 1,
     properties: {
-      token: { type: 'string' },
+      token: { type: 'string' }
     },
     allRequired: true,
-    additionalProperties: false,
-  },
-};
+    additionalProperties: false
+  }
+}
 
 const forgotPassword = {
   body: {
     type: 'object',
     minProperties: 1,
     properties: {
-      email: { type: 'string', format: 'email', transform: ['trim', 'toLowerCase'] },
+      email: { type: 'string', format: 'email', transform: ['trim', 'toLowerCase'] }
     },
     allRequired: true,
-    additionalProperties: false,
-  },
-};
+    additionalProperties: false
+  }
+}
 
 const verifyCode = {
-  query: {
-    type: 'object',
-    minProperties: 1,
-    properties: {
-      code: { type: 'string' },
-    },
-    allRequired: true,
-    additionalProperties: false,
-  },
   body: {
     type: 'object',
     minProperties: 1,
     properties: {
-      email: { type: 'string', format: 'email', transform: ['trim', 'toLowerCase'] },
+      code: { type: 'string' }
     },
     allRequired: true,
-    additionalProperties: false,
-  },
-};
+    additionalProperties: false
+  }
+}
 
 const resetPassword = {
-  query: {
-    type: 'object',
-    minProperties: 1,
-    properties: {
-      code: { type: 'string' },
-    },
-    allRequired: true,
-    additionalProperties: false,
-  },
   body: {
     type: 'object',
     minProperties: 1,
     properties: {
       email: { type: 'string', format: 'email', transform: ['trim', 'toLowerCase'] },
       password: { type: 'string', pattern: regexConstant.password.source },
+      code: { type: 'string' }
     },
     allRequired: true,
     additionalProperties: false,
     errorMessage: {
       properties: {
         password:
-          'must be of minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.',
-      },
-    },
-  },
-};
+          'must be of minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.'
+      }
+    }
+  }
+}
 
 const authValidation = {
   register,
@@ -113,7 +95,7 @@ const authValidation = {
   logout,
   forgotPassword,
   verifyCode,
-  resetPassword,
-};
+  resetPassword
+}
 
-module.exports = authValidation;
+module.exports = authValidation

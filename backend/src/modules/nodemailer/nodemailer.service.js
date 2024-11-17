@@ -1,18 +1,18 @@
-const mjml2html = require('mjml');
-const nodemailer = require('nodemailer');
-const path = require('path');
-const pug = require('pug');
-const ApiError = require('../../utils/ApiError');
-const errorCode = require('../../codes/error.code');
-const config = require('../../config/config.config');
-const logger = require('../winston/winston.logger');
+const mjml2html = require('mjml')
+const nodemailer = require('nodemailer')
+const path = require('path')
+const pug = require('pug')
+const ApiError = require('../../utils/ApiError')
+const errorCode = require('../../codes/error.code')
+const config = require('../../config/config.config')
+const logger = require('../winston/winston.logger')
 
-const transport = nodemailer.createTransport(config.mail);
+const transport = nodemailer.createTransport(config.mail)
 
 transport
   .verify()
   .then(() => logger.info('Connected to email server'))
-  .catch((error) => logger.warn(`Unable to connect to email server, ${error.message}.`));
+  .catch((error) => logger.warn(`Unable to connect to email server, ${error.message}.`))
 
 /**
  * Generate HTML from pug template
@@ -21,10 +21,10 @@ transport
  * @returns {string} HTML
  */
 const generateHTMLwPUG = (template, data) => {
-  const { html, errors } = mjml2html(pug.renderFile(path.join(__dirname, `../../templates/${template}.pug`), data));
-  if (errors && errors.length) throw new ApiError(errors[0].message);
-  return html;
-};
+  const { html, errors } = mjml2html(pug.renderFile(path.join(__dirname, `../../templates/${template}.pug`), data))
+  if (errors && errors.length) throw new ApiError(errors[0].message)
+  return html
+}
 
 /**
  * Send an email
@@ -35,7 +35,7 @@ const generateHTMLwPUG = (template, data) => {
  * @param {string} [mail.html] - Email body in html
  * @returns {Promise<object>} Object of acknowledgment
  */
-const sendEmail = async (transporter, mail) => transporter.sendMail(mail);
+const sendEmail = async (transporter, mail) => transporter.sendMail(mail)
 
 /**
  * Send confirmation email
@@ -50,8 +50,8 @@ const sendConfirmationEmail = async (to, name, code, t) =>
     from: config.SMTP.auth.user,
     to,
     subject: t(errorCode.CONFIRMATION_SUBJECT),
-    html: generateHTMLwPUG('confirmation', { name, code, t }),
-  });
+    html: generateHTMLwPUG('confirmation', { name, code, t })
+  })
 
 /**
  * Send confirmation email
@@ -65,8 +65,8 @@ const sendResetPasswordEmail = async (to, code, t) =>
     from: config.mail.auth.user,
     to,
     subject: t(errorCode.RESET_SUBJECT),
-    html: generateHTMLwPUG('reset', { code, t }),
-  });
+    html: generateHTMLwPUG('reset', { code, t })
+  })
 
 /**
  * Send registration email
@@ -81,8 +81,8 @@ const sendRegistrationEmail = async (to, name, password, t) =>
     from: config.mail.auth.user,
     to,
     subject: t(errorCode.REGISTRATION_SUBJECT),
-    html: generateHTMLwPUG('registration', { name, password, t }),
-  });
+    html: generateHTMLwPUG('registration', { name, password, t })
+  })
 
 /**
  * Send an email
@@ -92,13 +92,13 @@ const sendRegistrationEmail = async (to, name, password, t) =>
  * @returns {Promise<object>} Object of acknowledgment
  */
 const startConversation = async (subject, text) =>
-  sendEmail(transport, { from: config.mail.auth.user, to: config.mail.auth.user, subject, text });
+  sendEmail(transport, { from: config.mail.auth.user, to: config.mail.auth.user, subject, text })
 
 const nodemailerService = {
   sendConfirmationEmail,
   sendResetPasswordEmail,
   sendRegistrationEmail,
-  startConversation,
-};
+  startConversation
+}
 
-module.exports = nodemailerService;
+module.exports = nodemailerService

@@ -23,7 +23,7 @@ const errorCode = {
   NOT_FOUND: 'NOT_FOUND',
   TAKEN_EMAIL: 'TAKEN_EMAIL',
   REGISTRATION_SUBJECT: 'REGISTRATION_SUBJECT',
-  RESET_SUBJECT: 'RESET_SUBJECT',
-};
+  RESET_SUBJECT: 'RESET_SUBJECT'
+}
 
-module.exports = errorCode;
+module.exports = errorCode

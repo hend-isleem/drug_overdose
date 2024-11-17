@@ -1,4 +1,4 @@
-const { PlaywrightCrawler, Configuration } = require('crawlee');
+const { PlaywrightCrawler, Configuration } = require('crawlee')
 
 const getCrawler = (requestHandler, failedRequestHandler) =>
   new PlaywrightCrawler(
@@ -7,11 +7,11 @@ const getCrawler = (requestHandler, failedRequestHandler) =>
       failedRequestHandler,
       maxRequestRetries: 0,
       maxSessionRotations: 1000,
-      navigationTimeoutSecs: 120,
+      navigationTimeoutSecs: 120
     },
     new Configuration({
-      availableMemoryRatio: 1,
-    }),
-  );
+      availableMemoryRatio: 1
+    })
+  )
 
-module.exports = { getCrawler };
+module.exports = { getCrawler }

@@ -8,11 +8,11 @@ const drugSchema = {
       properties: {
         severity: { type: 'string', transform: ['trim'] },
         drugs: { type: 'string', transform: ['trim'] },
-        description: { type: 'string', transform: ['trim'] },
-      },
-    },
+        description: { type: 'string', transform: ['trim'] }
+      }
+    }
   },
-  createdAt: { type: ['string', 'null'], format: 'date-time' },
-};
+  createdAt: { type: ['string', 'null'], format: 'date-time' }
+}
 
-module.exports = drugSchema;
+module.exports = drugSchema
