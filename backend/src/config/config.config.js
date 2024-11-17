@@ -12,7 +12,7 @@ const envVarsSchema = {
   type: 'object',
   minProperties: 1,
   properties: {
-    TZ: { type: 'string', default: 'Africa/Cairo' },
+    TZ: { type: 'string', default: 'Canada/Eastern' },
     NODE_ENV: { type: 'string', enum: ['production', 'development'], default: 'development' },
     PORT: { type: 'integer', default: 3000 },
     MONGODB_URL: { type: 'string' },
@@ -22,6 +22,11 @@ const envVarsSchema = {
     REDIS_HOST: { type: 'string' },
     REDIS_PORT: { type: 'string' },
     REDIS_PASSWORD: { type: 'string' },
+    SMTP_HOST: { type: 'string' },
+    SMTP_PORT: { type: 'integer' },
+    SMTP_SECURE: { type: 'boolean' },
+    SMTP_USER: { type: 'string' },
+    SMTP_PASS: { type: 'string' },
   },
   allRequired: true,
   additionalProperties: true,
@@ -56,6 +61,15 @@ const config = {
     access_expiration_hours: process.env.JWT_ACCESS_EXPIRATION_HOURS,
     refresh_expiration_months: process.env.JWT_REFRESH_EXPIRATION_MONTHS,
     verification_code_expiration_hours: process.env.JWT_ACCESS_EXPIRATION_HOURS,
+  },
+  mail: {
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: process.env.SMTP_SECURE,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
   },
   redis: {
     host: process.env.REDIS_HOST,

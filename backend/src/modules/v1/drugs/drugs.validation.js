@@ -1,13 +1,13 @@
 const validationUtil = require('../../../utils/validation.util');
 const commonValidation = require('../../../validations/common.validation');
-const schema = require('./contacts.schema');
+const schema = require('./drugs.schema');
 
-const { schema: contactSchema, required } = validationUtil.getSchemaAndRequiredArray(schema);
+const { schema: drugSchema, required } = validationUtil.getSchemaAndRequiredArray(schema);
 
 const body = {
   type: 'object',
   minProperties: 1,
-  properties: contactSchema,
+  properties: drugSchema,
   additionalProperties: false,
 };
 
@@ -38,11 +38,11 @@ const remove = {
   params: commonValidation.params,
 };
 
-const contactValidation = {
+const drugValidation = {
   create,
   get,
   update,
   remove,
 };
 
-module.exports = contactValidation;
+module.exports = drugValidation;
