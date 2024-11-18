@@ -1,20 +1,20 @@
-const regexConstant = require('../../../constants/regexes.constant');
-const roleConstant = require('../../../constants/roles.constant');
-const validationUtil = require('../../../utils/validation.util');
-const commonValidation = require('../../../validations/common.validation');
-const schema = require('./users.schema');
+const regexConstant = require('../../../constants/regexes.constant')
+const roleConstant = require('../../../constants/roles.constant')
+const validationUtil = require('../../../utils/validation.util')
+const commonValidation = require('../../../validations/common.validation')
+const schema = require('./users.schema')
 
-const { schema: userSchema, required } = validationUtil.getSchemaAndRequiredArray(schema);
+const { schema: userSchema, required } = validationUtil.getSchemaAndRequiredArray(schema)
 
 const params = {
   type: 'object',
   minProperties: 1,
   properties: {
-    userEmail: { type: ['string', 'null'], format: 'email', transform: ['trim', 'toLowerCase'] },
+    userEmail: { type: ['string', 'null'], format: 'email', transform: ['trim', 'toLowerCase'] }
   },
   required: ['userEmail'],
-  additionalProperties: false,
-};
+  additionalProperties: false
+}
 
 const create = {
   body: {
@@ -22,9 +22,9 @@ const create = {
     minProperties: 1,
     properties: userSchema,
     additionalProperties: false,
-    required,
-  },
-};
+    required
+  }
+}
 
 const get = {
   query: {
@@ -32,11 +32,11 @@ const get = {
     minProperties: 1,
     properties: {
       ...commonValidation.queryProps,
-      role: { type: 'string', enum: Object.values(roleConstant) },
+      role: { type: 'string', enum: Object.values(roleConstant) }
     },
-    additionalProperties: false,
-  },
-};
+    additionalProperties: false
+  }
+}
 
 const update = {
   params,
@@ -44,13 +44,13 @@ const update = {
     type: 'object',
     minProperties: 1,
     properties: userSchema,
-    additionalProperties: false,
-  },
-};
+    additionalProperties: false
+  }
+}
 
 const remove = {
-  params,
-};
+  params
+}
 
 const resetPassword = {
   params,
@@ -59,25 +59,25 @@ const resetPassword = {
     minProperties: 1,
     properties: {
       currentPassword: { type: 'string' },
-      newPassword: { type: 'string', pattern: regexConstant.password.source },
+      newPassword: { type: 'string', pattern: regexConstant.password.source }
     },
     allRequired: true,
     additionalProperties: false,
     errorMessage: {
       properties: {
         newPassword:
-          'must be of minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.',
-      },
-    },
-  },
-};
+          'must be of minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.'
+      }
+    }
+  }
+}
 
 const userValidation = {
   create,
   get,
   update,
   remove,
-  resetPassword,
-};
+  resetPassword
+}
 
-module.exports = userValidation;
+module.exports = userValidation

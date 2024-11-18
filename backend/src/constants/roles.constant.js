@@ -1,6 +1,6 @@
 const roleConstant = {
   ADMIN: 'admin',
-  USER: 'user',
-};
+  USER: 'user'
+}
 
-module.exports = roleConstant;
+module.exports = roleConstant
