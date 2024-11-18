@@ -1,0 +1,21 @@
+const express = require('express')
+const auth = require('../../../middlewares/auth.middleware')
+const validate = require('../../../middlewares/validate.middleware')
+const drugValidation = require('./drugs.validation')
+const drugController = require('./drugs.controller')
+const roleConstant = require('../../../constants/roles.constant')
+
+const drugRoute = express.Router()
+
+drugRoute
+  .route('/')
+  .post(validate(drugValidation.create), drugController.create)
+  .get(auth(roleConstant.ADMIN), validate(drugValidation.get), drugController.query)
+
+drugRoute
+  .route('/:id')
+  .get(auth(roleConstant.ADMIN), validate(drugValidation.remove), drugController.get)
+  .patch(auth(roleConstant.ADMIN), validate(drugValidation.update), drugController.update)
+  .delete(auth(roleConstant.ADMIN), validate(drugValidation.remove), drugController.remove)
+
+module.exports = drugRoute
