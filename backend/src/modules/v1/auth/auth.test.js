@@ -23,6 +23,11 @@ describe('Auth Routes', async function () {
     password: 'password1'
   }
 
+  before(async () => {
+    const res = await request.post('/v1/auth/admin-login').send(adminData)
+    await request.delete(`/v1/users/${userData.email}`).auth(res.body.tokens.access.token, { type: 'bearer' })
+  })
+
   let userToken
   let resetCode
 
