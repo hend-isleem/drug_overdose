@@ -23,7 +23,7 @@ jobs:
     env:
       TZ: ${{ secrets.TZ }}
       PORT: 3000
-      NODE_ENV: development
+      NODE_ENV: test
       MONGODB_URL: ${{ secrets.MONGODB_URL }}
       JWT_SECRET: ${{ secrets.JWT_SECRET}}
       JWT_ACCESS_EXPIRATION_HOURS: ${{ secrets.JWT_ACCESS_EXPIRATION_HOURS}}
