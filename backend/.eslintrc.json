@@ -1,0 +1,32 @@
+{
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "extends": ["airbnb-base", "plugin:security/recommended", "plugin:prettier/recommended", "plugin:local-rules/all"],
+  "plugins": ["security", "prettier", "require-sort", "local-rules"],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "rules": {
+    "no-console": "off",
+    "func-names": "off",
+    "no-underscore-dangle": "off",
+    "consistent-return": "off",
+    "security/detect-object-injection": "off",
+    "no-param-reassign": "off",
+    "no-nested-ternary": "off",
+    "no-restricted-syntax": "off",
+    "no-await-in-loop": "off",
+    "no-plusplus": "off",
+    "class-methods-use-this": "off",
+    "no-continue": "off",
+    "guard-for-in": "off",
+    "no-empty": "off",
+    "no-shadow": "off",
+    "no-use-before-define": "off",
+    "no-constant-condition": "off",
+    "security/detect-non-literal-regexp": "off",
+    "max-classes-per-file": ["error", 2]
+  }
+}
