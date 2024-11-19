@@ -70,11 +70,10 @@ const LoginForm = () => {
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* Success Popup */}
       {showSuccessPopup && (
         <div style={popupContainerStyle}>
           <div style={popupStyle}>
-            <div style={popupIconStyle}>✔️</div>
+            <div style={popupIconStyle}>✅</div>
             <p style={popupMessageStyle}>Login Successful!</p>
           </div>
         </div>
@@ -141,7 +140,7 @@ const popupStyle = {
 
 const popupIconStyle = {
   fontSize: "40px",
-  color: "green",
+  color: "rgb(0, 123, 255)",
 };
 
 const popupMessageStyle = {
