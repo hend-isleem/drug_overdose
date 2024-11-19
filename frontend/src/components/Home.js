@@ -1,20 +1,39 @@
-// src/components/Home.js
-
-import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link for routing
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
+const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+useEffect(() => {
+    // Check if user data exists in localStorage (indicating they're logged in)
+    const user = localStorage.getItem('user');
+    if (user) {
+    setIsLoggedIn(true);
+    } else {
+    setIsLoggedIn(false);
+    }
+}, []);
+
   return (
     <div style={homeContainerStyle}>
-      <div style={contentContainerStyle}>
-        <h1 style={headingStyle}>Welcome to the Drug Interaction Checker ✨</h1>
-        <p style={subHeadingStyle}>
-          Easily check for potential interactions between your medications.
-        </p>
-        <Link to="/input-medication" style={buttonStyle}>
-          Start Checking Medications
-        </Link>
-      </div>
+        <div style={contentContainerStyle}>
+            <h1 style={headingStyle}>Welcome to the Drug Interaction Checker ✨</h1>
+            <p style={subHeadingStyle}>
+            Easily check for potential interactions between your medications.
+            </p>
+            {isLoggedIn ? (
+                <Link to="/input-medication" style={buttonStyle}>
+                    Start Checking Medications
+                </Link>
+            ) : (
+                <div>
+                    <h1 style={subHeadingStyle}>Please log in to access the Drug Interaction Checker</h1>
+                    <Link to="/register" style={authButtonStyle}>Register</Link>
+                    <Link to="/login" style={authButtonStyle}>Login</Link>
+                </div>
+            )}
+        </div>
+      
     </div>
   );
 };
@@ -65,6 +84,24 @@ const buttonStyle = {
   boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
   transition: 'background-color 0.3s ease, transform 0.3s ease',
   marginTop: '20px',
+};
+
+const authButtonStyle = {
+    display: 'inline-block',
+    padding: '10px 15px',
+    maxWidth: '8%',
+    backgroundColor: 'rgb(0, 123, 255)', 
+    color: 'white',
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    textDecoration: 'none',
+    borderRadius: '8px',
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    transition: 'background-color 0.3s ease, transform 0.3s ease',
+    marginTop: '20px',
+    margin: '10px',
+    textAlign: 'center',
+    minWidth: 'fit-content'
 };
 
 export default Home;
