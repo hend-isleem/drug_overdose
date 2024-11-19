@@ -5,7 +5,7 @@ const ApiError = require('../../../utils/ApiError')
 const catchAsync = require('../../../utils/catchAsync')
 const userService = require('../users/users.service')
 const codeService = require('./codes/codes.service')
-const nodemailerService = require('../../nodemailer/nodemailer.service')
+// const nodemailerService = require('../../nodemailer/nodemailer.service')
 const tokenService = require('./tokens/tokens.service')
 const roleConstant = require('../../../constants/roles.constant')
 const errorCode = require('../../../codes/error.code')
@@ -17,7 +17,7 @@ const register = catchAsync(async (req, res) => {
   if (config.env === 'test') {
     res.status(httpStatus.CREATED).send({ code: codeDoc.code })
   } else {
-    await nodemailerService.sendConfirmationEmail(user.email, user.name, codeDoc.code, req.t)
+    // await nodemailerService.sendConfirmationEmail(user.email, user.name, codeDoc.code, req.t)
     res.status(httpStatus.CREATED).send()
   }
 })
@@ -27,11 +27,11 @@ const login = catchAsync(async (req, res) => {
   if (user.role !== roleConstant.USER) throw new ApiError(httpStatus.BAD_REQUEST, errorCode.USER_ROLE_LOGIN)
   const correctPassword = await bcrypt.compare(req.body.password, user.password)
   if (!correctPassword) throw new ApiError(httpStatus.BAD_REQUEST, errorCode.INCORRECT_PASSWORD)
-  if (!user.verified) {
-    const codeDoc = await codeService.create({ email: user.email })
-    if (config.env !== 'test') await nodemailerService.sendConfirmationEmail(user.email, user.name, codeDoc.code, req.t)
-    throw new ApiError(httpStatus.PRECONDITION_REQUIRED, errorCode.UNVERIFIED_EMAIL)
-  }
+  // if (!user.verified) {
+  //   const codeDoc = await codeService.create({ email: user.email })
+    // if (config.env !== 'test') await nodemailerService.sendConfirmationEmail(user.email, user.name, codeDoc.code, req.t)
+    // throw new ApiError(httpStatus.PRECONDITION_REQUIRED, errorCode.UNVERIFIED_EMAIL)
+  // }
   const tokens = await tokenService.createBothTokens({ email: user.email, role: user.role })
   res.send({ user: _.omit(user, ['password']), tokens })
 })
@@ -61,7 +61,7 @@ const forgotPassword = catchAsync(async (req, res) => {
   if (config.env === 'test') {
     res.send({ code: codeDoc.code })
   } else {
-    await nodemailerService.sendResetPasswordEmail(user.email, codeDoc.code, req.t)
+    // await nodemailerService.sendResetPasswordEmail(user.email, codeDoc.code, req.t)
     res.status(httpStatus.NO_CONTENT).send()
   }
 })
@@ -94,7 +94,7 @@ const resendConfirmationEmail = catchAsync(async (req, res) => {
   if (config.env === 'test') {
     res.send({ code: codeDoc.code })
   } else {
-    await nodemailerService.sendConfirmationEmail(user.email, user.name, codeDoc.code, req.t)
+    // await nodemailerService.sendConfirmationEmail(user.email, user.name, codeDoc.code, req.t)
     res.status(httpStatus.NO_CONTENT).send()
   }
 })
