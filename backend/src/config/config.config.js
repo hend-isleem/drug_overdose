@@ -21,12 +21,12 @@ const envVarsSchema = {
     JWT_REFRESH_EXPIRATION_MONTHS: { type: 'integer', default: 1 },
     REDIS_HOST: { type: 'string' },
     REDIS_PORT: { type: 'string' },
-    REDIS_PASSWORD: { type: 'string' },
-    SMTP_HOST: { type: 'string' },
-    SMTP_PORT: { type: 'integer' },
-    SMTP_SECURE: { type: 'boolean' },
-    SMTP_USER: { type: 'string' },
-    SMTP_PASS: { type: 'string' }
+    REDIS_PASSWORD: { type: 'string' }
+    // SMTP_HOST: { type: 'string' },
+    // SMTP_PORT: { type: 'integer' },
+    // SMTP_SECURE: { type: 'boolean' },
+    // SMTP_USER: { type: 'string' },
+    // SMTP_PASS: { type: 'string' }
   },
   allRequired: true,
   additionalProperties: true
