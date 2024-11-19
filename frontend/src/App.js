@@ -6,6 +6,7 @@ import InteractionResults from "./components/InteractionResults";
 import Footer from "./components/Footer";
 import RegisterForm from "./components/Register";
 import LoginForm from "./components/Login";
+import Home from "./components/Home";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={<h2>Welcome to the Drug Interaction Checker</h2>}
+              element={<Home />}
             />
             <Route path="/input-medication" element={<MedicationInputForm />} />
             <Route
