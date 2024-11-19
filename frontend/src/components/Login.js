@@ -20,8 +20,8 @@ const LoginForm = () => {
       const response = await axios.post("http://localhost:3001/v1/auth/login", {
         "email": email,
         "password": password
-    });
-      console.log(response);
+      });
+      
       if (response.data.tokens && response.data.tokens.access.token) {
         localStorage.setItem("user", JSON.stringify({ email, token: response.data.tokens.access.token}));
         setShowSuccessPopup(true);
