@@ -1,21 +1,29 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    if (
-      storedUser &&
-      storedUser.username === username &&
-      storedUser.password === password
-    ) {
-      alert("Login successful!");
-    } else {
-      alert("Invalid credentials.");
+    setError("");
+    try {
+      const response = await axios.post("http://localhost:3001/v1/auth/login", {
+        "email": username,
+        "password": password
+    });
+      console.log(response);
+      if (response.data.tokens && response.data.tokens.access.token) {
+        localStorage.setItem("user", JSON.stringify({ username, token: response.data.tokens.access.token}));
+        alert("Login successful!");
+      } else {
+        alert("Login failed: Invalid response from server.");
+      }
+    } catch (err) {
+      console.log(err);
+      setError("Invalid credentials or server error. Please try again.");
     }
   };
 
@@ -49,6 +57,7 @@ const LoginForm = () => {
           Login
         </button>
       </form>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };
