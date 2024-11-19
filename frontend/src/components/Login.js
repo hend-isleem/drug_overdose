@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const LoginForm = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");  
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); 
@@ -18,12 +18,12 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post("http://localhost:3001/v1/auth/login", {
-        "email": username,
+        "email": email,
         "password": password
     });
       console.log(response);
       if (response.data.tokens && response.data.tokens.access.token) {
-        localStorage.setItem("user", JSON.stringify({ username, token: response.data.tokens.access.token}));
+        localStorage.setItem("user", JSON.stringify({ email, token: response.data.tokens.access.token}));
         setShowSuccessPopup(true);
         setTimeout(() => {
           setShowSuccessPopup(false); 
@@ -43,12 +43,12 @@ const LoginForm = () => {
       <h2>Login</h2>
       <form onSubmit={handleLogin} style={formStyle}>
         <div style={inputGroupStyle}>
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="email">Email:</label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             style={inputStyle}
             required
           />
