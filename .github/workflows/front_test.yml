@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: 21.6.2
 
+      - name: Go to front-end
+        run: cd frontend
+
       - name: Install Dependencies
         run: npm install
 
