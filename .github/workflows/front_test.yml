@@ -25,13 +25,13 @@ jobs:
         run: cd frontend
 
       - name: Install Dependencies
-        run: npm install
+        run: cd frontend && npm install
 
       - name: Run Tests
-        run: npm test -- --watchAll=false || exit 0
+        run: cd frontend && npm test -- --watchAll=false || exit 0
 
       - name: Build Frontend
-        run: CI=false npm run build
+        run: cd frontend && CI=false npm run build
 
       - name: Final step (marking success or failure)
         if: success()
