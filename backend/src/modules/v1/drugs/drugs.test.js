@@ -9,7 +9,7 @@ const { expect } = chai
 chai.use(chaiHttp)
 const request = supertest(app)
 
-describe('Auth Routes', async function () {
+describe('Drugs Routes', async function () {
   this.timeout(20000)
 
   describe('POST /', () => {

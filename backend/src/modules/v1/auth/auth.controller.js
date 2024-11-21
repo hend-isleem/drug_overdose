@@ -12,7 +12,7 @@ const errorCode = require('../../../codes/error.code')
 const config = require('../../../config/config.config')
 
 const register = catchAsync(async (req, res) => {
-  const user = await userService.create({ ...req.body, role: roleConstant.USER })
+  const user = await userService.create({ ...req.body, role: roleConstant.USER, verified: true })
   const codeDoc = await codeService.create({ email: user.email })
   if (config.env === 'test') {
     res.status(httpStatus.CREATED).send({ code: codeDoc.code })
