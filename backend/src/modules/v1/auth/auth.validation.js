@@ -6,7 +6,7 @@ const register = {
     minProperties: 1,
     properties: {
       email: { type: 'string', format: 'email', transform: ['trim', 'toLowerCase'] },
-      password: { type: 'string', pattern: regexConstant.password.source },
+      password: { type: 'string', minLength: 8, maxLength: 24 },
       name: { type: 'string' }
     },
     allRequired: true,
