@@ -96,7 +96,7 @@ const pageContainerStyle = {
   justifyContent: "center",
   alignItems: "center",
   minHeight: "100vh",
-  backgroundColor: "#222831;",
+  backgroundColor: "#222831",
 };
 
 const formContainerStyle = {
