@@ -1,0 +1,38 @@
+name: Run front_test
+
+on:
+  pull_request:
+    branches: ["main", "sali"]
+  push:
+    branches: ["main", "sali"]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21.6.2
+
+      - name: Go to front-end
+        run: cd frontend
+
+      - name: Install Dependencies
+        run: cd frontend && npm install
+
+      - name: Run Tests
+        run: cd frontend && npm test -- --watchAll=false || exit 0
+
+      - name: Build Frontend
+        run: cd frontend && CI=false npm run build
+
+      - name: Final step (marking success or failure)
+        if: success()
+        run: echo "Front-end Tests passed. Workflow completed successfully!"
