@@ -92,10 +92,10 @@ const getLevelColor = (level) => {
 const styles = {
   container: {
     padding: "20px",
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#393e46",
   },
   header: {
-    color: "#333",
+    color: "white",
     textAlign: "center",
   },
   interactionCard: {
