@@ -1,39 +1,34 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
-const mockInteractions = [
-  {
-    type: "Moderate",
-    drugs: ["Aspirin", "Eplerenone"],
-    description:
-      "Using aspirin together with eplerenone may decrease the effects of eplerenone.",
-    advice: "Monitor blood pressure and adjust dosages as necessary.",
-  },
-  {
-    type: "Minor",
-    drugs: ["Paracetamol", "Ibuprofen"],
-    description:
-      "No serious interactions known, but always consult with a healthcare provider.",
-    advice: "Use as prescribed.",
-  },
-];
+const InteractionReport = () => {  
+  const location = useLocation();
+  const interactions = location.state?.interactions || [];
 
-const InteractionReport = () => {
   return (
     <div style={styles.container}>
       <h1 style={styles.header}>Drug Interaction Report</h1>
-      {mockInteractions.map((interaction, index) => (
-        <div key={index} style={styles.interactionCard}>
-          <h2>{interaction.type} Interaction</h2>
-          <h3>Drugs: {interaction.drugs.join(", ")}</h3>
-          <p>{interaction.description}</p>
-          <p>
-            <strong>Advice:</strong> {interaction.advice}
-          </p>
-        </div>
-      ))}
+      {interactions.length === 0 ? (
+        <p>No interactions found. Please try again.</p>
+      ) : (
+        interactions.map((interaction, index) => (
+          <div
+            key={index}
+            style={{
+              ...styles.classificationCard,
+              borderLeftColor: getLevelColor(interaction.severity),
+            }}
+          >
+            <h2 style={styles.severity}>{interaction.severity}</h2>
+            <h3>Drugs: {interaction.drugs.split("  ").join(" | ")}</h3>
+            <p style={styles.description}>{interaction.description}</p>
+          </div>
+        ))
+      )}
       <InteractionClassification />
     </div>
   );
+
 };
 
 const InteractionClassification = () => {
@@ -60,17 +55,18 @@ const InteractionClassification = () => {
   ];
 
   return (
-    <div>
+    <div style={styles.classificationContainer}>
+      <h2 style={styles.referenceHeader}>Severity Levels Reference</h2>
       {classifications.map((item, index) => (
         <div
           key={index}
           style={{
-            ...styles.classificationCard,
+            ...styles.smallCard,
             borderLeftColor: getLevelColor(item.level),
           }}
         >
-          <h2 style={styles.level}>{item.level}</h2>
-          <p style={styles.description}>{item.description}</p>
+          <h4 style={styles.smallLevel}>{item.level}</h4>
+          <p style={styles.smallDescription}>{item.description}</p>
         </div>
       ))}
     </div>
@@ -121,6 +117,29 @@ const styles = {
   },
   description: {
     fontSize: "16px",
+  },
+  classificationContainer: {
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: "10px",
+    marginTop: "15%",
+  },
+  smallCard: {
+    backgroundColor: "#fff",
+    padding: "2px 2px 2px 8px",
+    margin: "10px 0",
+    borderLeft: "4px solid",
+    borderRadius: "6px",
+    boxShadow: "0 2px 3px rgba(0,0,0,0.1)",
+  },
+  smallLevel: {
+    fontSize: "14px",
+    fontWeight: "bold",
+    marginBottom: "5px",
+    color: "#333",
+  },
+  smallDescription: {
+    fontSize: "12px",
+    color: "#555",
   },
 };
 
