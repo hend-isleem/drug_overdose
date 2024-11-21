@@ -92,7 +92,7 @@ const pageStyle = {
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: "#222831;", // Matches login page background
+  backgroundColor: "#222831", // Matches login page background
   margin: 0,
 };
 
