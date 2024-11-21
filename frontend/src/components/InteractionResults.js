@@ -98,6 +98,9 @@ const styles = {
     color: "white",
     textAlign: "center",
   },
+  referenceHeader: {
+    color: "white",
+  },
   interactionCard: {
     backgroundColor: "#fff",
     padding: "15px",
