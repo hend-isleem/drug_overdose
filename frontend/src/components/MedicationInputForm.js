@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState }  from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
+
 
 
 
@@ -10,7 +11,18 @@ const MedicationInputForm = () => {
   const [currentDrug, setCurrentDrug] = useState("");  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const navigate = useNavigate(); // Initialize navigate function
+
+  useEffect(() => {
+    // User logged in?
+    const user = localStorage.getItem('user');
+    if (user) {
+    setIsLoggedIn(true);
+    } else {
+    setIsLoggedIn(false);
+    }
+  }, []);
 
   const handleChange = (e) => {
     setCurrentDrug(e.target.value);
@@ -28,6 +40,11 @@ const MedicationInputForm = () => {
   };
 
   const handleCheckInteractions = async () => {
+    if (!isLoggedIn) {
+      alert("Please log in to check interactions.");
+      return; // Nope, no API call for you if you are not logged in :)
+    }
+
     if (drugList.length === 0) return;
     // drugs API request
     try {
@@ -39,9 +56,11 @@ const MedicationInputForm = () => {
       if (response.status === 200) {
         const data = response.data;
         navigate("/interaction-results", { state: { interactions: data.interactions } }); 
+      } else {
+        setError(response.message || "An error occurred. Please try again.");
       }
     } catch (err) {
-      console.error("Failed to fetch drug interactions:", error.message);
+      console.error("Failed to fetch drug interactions:", error);
       setError(err.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
