@@ -6,6 +6,7 @@ import InteractionResults from "./components/InteractionResults";
 import Footer from "./components/Footer";
 import RegisterForm from "./components/Register";
 import LoginForm from "./components/Login";
+import Logs from "./components/Logs";
 import Home from "./components/Home";
 
 function App() {
@@ -15,10 +16,7 @@ function App() {
         <Header />
         <div className="content" style={contentStyle}>
           <Routes>
-            <Route
-              path="/"
-              element={<Home />}
-            />
+            <Route path="/" element={<Home />} />
             <Route path="/input-medication" element={<MedicationInputForm />} />
             <Route
               path="/interaction-results"
@@ -26,6 +24,7 @@ function App() {
             />
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/logs" element={<Logs />} />
           </Routes>
         </div>
         <Footer />

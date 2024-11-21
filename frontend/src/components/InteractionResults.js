@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 const mockInteractions = [
   {
@@ -18,19 +19,33 @@ const mockInteractions = [
 ];
 
 const InteractionReport = () => {
+  const location = useLocation();
+  const medications = location.state?.medications || [];
+
+  const relevantInteractions = mockInteractions.filter((interaction) =>
+    interaction.drugs.some((drug) => medications.includes(drug))
+  );
+
   return (
     <div style={styles.container}>
       <h1 style={styles.header}>Drug Interaction Report</h1>
-      {mockInteractions.map((interaction, index) => (
-        <div key={index} style={styles.interactionCard}>
-          <h2>{interaction.type} Interaction</h2>
-          <h3>Drugs: {interaction.drugs.join(", ")}</h3>
-          <p>{interaction.description}</p>
-          <p>
-            <strong>Advice:</strong> {interaction.advice}
-          </p>
-        </div>
-      ))}
+      {relevantInteractions.length > 0 ? (
+        relevantInteractions.map((interaction, index) => (
+          <div key={index} style={styles.interactionCard}>
+            <h2>{interaction.type} Interaction</h2>
+            <h3>Drugs: {interaction.drugs.join(", ")}</h3>
+            <p>{interaction.description}</p>
+            <p>
+              <strong>Advice:</strong> {interaction.advice}
+            </p>
+          </div>
+        ))
+      ) : (
+        <p style={styles.noInteractions}>
+          No known interactions for the selected medications. Always consult
+          with a healthcare provider for more details.
+        </p>
+      )}
       <InteractionClassification />
     </div>
   );

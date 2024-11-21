@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
-
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");  
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false); 
+  const [error, setError] = useState("");
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const navigate = useNavigate();
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,17 +16,20 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post("http://localhost:3001/v1/auth/login", {
-        "email": email,
-        "password": password
+        email: email,
+        password: password,
       });
-      
+
       if (response.data.tokens && response.data.tokens.access.token) {
-        localStorage.setItem("user", JSON.stringify({ email, token: response.data.tokens.access.token}));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ email, token: response.data.tokens.access.token })
+        );
         setShowSuccessPopup(true);
         setTimeout(() => {
-          setShowSuccessPopup(false); 
-          navigate("/"); 
-        }, 2000); 
+          setShowSuccessPopup(false);
+          navigate("/");
+        }, 2000);
       } else {
         alert("Login failed: Invalid response from server.");
       }
@@ -39,83 +40,129 @@ const LoginForm = () => {
   };
 
   return (
-    <div style={formContainerStyle}>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin} style={formStyle}>
-        <div style={inputGroupStyle}>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="text"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={inputStyle}
-            required
-          />
-        </div>
-        <div style={inputGroupStyle}>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={inputStyle}
-            required
-          />
-        </div>
-        <button type="submit" style={submitButtonStyle}>
-          Login
-        </button>
-      </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {showSuccessPopup && (
-        <div style={popupContainerStyle}>
-          <div style={popupStyle}>
-            <div style={popupIconStyle}>✅</div>
-            <p style={popupMessageStyle}>Login Successful!</p>
+    <div style={pageContainerStyle}>
+      <div style={formContainerStyle}>
+        <h2 style={formTitleStyle}>Login</h2>
+        <form onSubmit={handleLogin} style={formStyle}>
+          <div style={inputGroupStyle}>
+            <label htmlFor="email" style={labelStyle}>
+              Email:
+            </label>
+            <input
+              type="text"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={inputStyle}
+              required
+            />
           </div>
-        </div>
-      )}
+          <div style={inputGroupStyle}>
+            <label htmlFor="password" style={labelStyle}>
+              Password:
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={inputStyle}
+              required
+            />
+          </div>
+          <button type="submit" style={submitButtonStyle}>
+            Login
+          </button>
+        </form>
+        {error && <p style={errorStyle}>{error}</p>}
+
+        {showSuccessPopup && (
+          <div style={popupContainerStyle}>
+            <div style={popupStyle}>
+              <div style={popupIconStyle}>✅</div>
+              <p style={popupMessageStyle}>Login Successful!</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
+};
+
+// Styles
+
+const pageContainerStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  minHeight: "100vh",
+  backgroundColor: "#222831;",
 };
 
 const formContainerStyle = {
   width: "100%",
   maxWidth: "400px",
-  margin: "0 auto",
-  padding: "20px",
-  border: "1px solid #ccc",
-  borderRadius: "5px",
-  backgroundColor: "#f9f9f9",
+  padding: "30px",
+  backgroundColor: "#393e46",
+  borderRadius: "10px",
+  color: "#eeeeee",
+  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
+const formTitleStyle = {
+  textAlign: "center",
+  marginBottom: "20px",
+  fontSize: "1.5rem",
+  color: "#ffffff",
 };
 
 const formStyle = {
   display: "flex",
   flexDirection: "column",
+  width: "100%",
 };
 
 const inputGroupStyle = {
   marginBottom: "15px",
+  width: "100%",
+};
+
+const labelStyle = {
+  marginBottom: "5px",
+  display: "block",
+  fontSize: "1rem",
+  color: "#eeeeee",
 };
 
 const inputStyle = {
   width: "100%",
   padding: "10px",
-  border: "1px solid #ccc",
+  border: "1px solid #eeeeee",
   borderRadius: "5px",
-  marginTop: "5px",
+  backgroundColor: "#222831",
+  color: "#ffffff",
+  boxSizing: "border-box",
 };
 
 const submitButtonStyle = {
+  width: "100%",
   padding: "10px",
-  backgroundColor: "#007BFF",
-  color: "#fff",
+  backgroundColor: "#00adb5",
+  color: "#ffffff",
   border: "none",
   borderRadius: "5px",
   cursor: "pointer",
+  fontSize: "1rem",
+  transition: "background-color 0.3s ease",
+};
+
+const errorStyle = {
+  color: "red",
+  marginTop: "10px",
+  textAlign: "center",
 };
 
 const popupContainerStyle = {
@@ -132,7 +179,7 @@ const popupContainerStyle = {
 };
 
 const popupStyle = {
-  backgroundColor: "white",
+  backgroundColor: "#ffffff",
   padding: "20px",
   borderRadius: "8px",
   textAlign: "center",
