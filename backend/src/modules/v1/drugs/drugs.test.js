@@ -12,11 +12,36 @@ const request = supertest(app)
 describe('Drugs Routes', async function () {
   this.timeout(20000)
 
+  const userData = {
+    email: 'testuser@example.com',
+    password: 'StrongP@ssw0rd',
+    name: 'Test User'
+  }
+
+  const adminData = {
+    email: 'admin@sesa1.com',
+    password: 'password1'
+  }
+
+  let userToken
+
+  before(async () => {
+    await request.post('/v1/auth/register').send(userData)
+    const res = await request.post('/v1/auth/login').send(userData)
+    userToken = res.body.tokens.access.token
+  })
+
+  after(async () => {
+    const res = await request.post('/v1/auth/admin-login').send(adminData)
+    await request.delete(`/v1/users/${userData.email}`).auth(res.body.tokens.access.token, { type: 'bearer' })
+  })
+
   describe('POST /', () => {
     it('should return interaction warnings between the drugs', async () => {
-      const res = await request.post('/v1/drugs').send({
-        drugs: ['Lisinopril', 'Atorvastatin', 'Ibuprofen']
-      })
+      const res = await request
+        .post('/v1/drugs')
+        .auth(userToken, { type: 'bearer' })
+        .send({ drugs: ['Lisinopril', 'Atorvastatin', 'Ibuprofen'] })
       expect(res.status).to.equal(httpStatus.OK)
       expect(res.body).to.deep.equal({
         _id: '6739527c934ecc31f543e84c',
@@ -35,7 +60,7 @@ describe('Drugs Routes', async function () {
     })
 
     it('should return validation error for missing drugs data', async () => {
-      const res = await request.post('/v1/drugs').send()
+      const res = await request.post('/v1/drugs').auth(userToken, { type: 'bearer' }).send()
       expect(res.status).to.equal(httpStatus.BAD_REQUEST)
     })
   })

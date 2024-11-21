@@ -9,12 +9,12 @@ const drugRoute = express.Router()
 
 drugRoute
   .route('/')
-  .post(validate(drugValidation.create), drugController.create)
-  .get(auth(roleConstant.ADMIN), validate(drugValidation.get), drugController.query)
+  .post(auth(roleConstant.USER), validate(drugValidation.create), drugController.create)
+  .get(auth(roleConstant.USER), validate(drugValidation.get), drugController.query)
 
 drugRoute
   .route('/:id')
-  .get(auth(roleConstant.ADMIN), validate(drugValidation.remove), drugController.get)
+  .get(auth(roleConstant.USER), validate(drugValidation.remove), drugController.get)
   .patch(auth(roleConstant.ADMIN), validate(drugValidation.update), drugController.update)
   .delete(auth(roleConstant.ADMIN), validate(drugValidation.remove), drugController.remove)
 
