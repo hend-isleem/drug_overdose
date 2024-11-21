@@ -12,15 +12,17 @@ const MedicationInputForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [accessToken, setAccessToken] = useState(""); 
   const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
     // User logged in?
     const user = localStorage.getItem('user');
     if (user) {
-    setIsLoggedIn(true);
+      setAccessToken(JSON.parse(user).token);
+      setIsLoggedIn(true);
     } else {
-    setIsLoggedIn(false);
+      setIsLoggedIn(false);
     }
   }, []);
 
@@ -51,7 +53,14 @@ const MedicationInputForm = () => {
       setLoading(true);
       setError(null);
       
-      const response = await axios.post("http://localhost:3001/v1/drugs/", { "drugs": drugList });
+      const response = await axios.post("http://localhost:3001/v1/drugs/", 
+        { "drugs": drugList },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Add the token here
+          },
+        }
+      );
 
       if (response.status === 200) {
         const data = response.data;
@@ -68,6 +77,11 @@ const MedicationInputForm = () => {
 
         navigate("/interaction-results", { state: { interactions: data.interactions } }); 
       } else {
+        if (response && response.status === 401) {
+          alert("Session expired. Please log in again.");
+          navigate("/login");
+        }
+        
         setError(response.message || "An error occurred. Please try again.");
       }
     } catch (err) {
