@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
+
+
+
 
 const MedicationInputForm = () => {
   const [drugList, setDrugList] = useState([]);
-  const [currentDrug, setCurrentDrug] = useState("");
+  const [currentDrug, setCurrentDrug] = useState("");  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate(); // Initialize navigate function
 
   const handleChange = (e) => {
@@ -21,9 +27,25 @@ const MedicationInputForm = () => {
     setDrugList(drugList.filter((_, i) => i !== index));
   };
 
-  const handleCheckInteractions = () => {
-    console.log("Checking interactions for:", drugList);
-    navigate("/interaction-results"); // Navigate to the results page
+  const handleCheckInteractions = async () => {
+    if (drugList.length === 0) return;
+    // drugs API request
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axios.post("http://localhost:3001/v1/drugs/", { "drugs": drugList });
+
+      if (response.status === 200) {
+        const data = response.data;
+        navigate("/interaction-results", { state: { interactions: data.interactions } }); 
+      }
+    } catch (err) {
+      console.error("Failed to fetch drug interactions:", error.message);
+      setError(err.message || "An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
@@ -82,9 +104,18 @@ const MedicationInputForm = () => {
           Start over
         </button>
       </div>
+      {loading && <LoadingOverlay />} 
     </div>
   );
 };
+
+const LoadingOverlay = () => (
+  <div style={overlayStyle}>
+    <div style={spinnerStyle}></div>
+    <p style={loadingTextStyle}>Loading...</p>
+  </div>
+);
+
 // Styling
 const containerStyle = {
   width: "500px",
@@ -190,6 +221,34 @@ const disabledCheckButtonStyle = {
   border: "none",
   borderRadius: "4px",
   cursor: "not-allowed",
+};
+const overlayStyle = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 1000,
+};
+
+const spinnerStyle = {
+  width: "50px",
+  height: "50px",
+  border: "5px solid #f3f3f3",
+  borderTop: "5px solid #007BFF",
+  borderRadius: "50%",
+  animation: "spin 1s linear infinite",
+};
+
+const loadingTextStyle = {
+  color: "#fff",
+  marginTop: "10px",
+  fontSize: "18px",
 };
 
 export default MedicationInputForm;
