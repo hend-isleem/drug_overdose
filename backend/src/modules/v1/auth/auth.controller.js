@@ -29,8 +29,8 @@ const login = catchAsync(async (req, res) => {
   if (!correctPassword) throw new ApiError(httpStatus.BAD_REQUEST, errorCode.INCORRECT_PASSWORD)
   // if (!user.verified) {
   //   const codeDoc = await codeService.create({ email: user.email })
-    // if (config.env !== 'test') await nodemailerService.sendConfirmationEmail(user.email, user.name, codeDoc.code, req.t)
-    // throw new ApiError(httpStatus.PRECONDITION_REQUIRED, errorCode.UNVERIFIED_EMAIL)
+  // if (config.env !== 'test') await nodemailerService.sendConfirmationEmail(user.email, user.name, codeDoc.code, req.t)
+  // throw new ApiError(httpStatus.PRECONDITION_REQUIRED, errorCode.UNVERIFIED_EMAIL)
   // }
   const tokens = await tokenService.createBothTokens({ email: user.email, role: user.role })
   res.send({ user: _.omit(user, ['password']), tokens })
