@@ -25,12 +25,13 @@ const Footer = () => {
 
 // Basic styling for the footer
 const footerStyle = {
-  backgroundColor: "#333",
-  color: "#fff",
+  backgroundColor: "#393e46", // Matches the form container's color
+  color: "#eeeeee", // Light gray for text
   padding: "20px",
   textAlign: "center",
-  borderTop: "1px solid #444",
-  marginTop: "auto", // This will push the footer to the bottom when needed
+  borderTop: "1px solid #4a515d", // Subtle border to separate footer
+  marginTop: "auto",
+  fontFamily: "'Poppins', sans-serif", // Matching the header font
 };
 
 const footerLinksStyle = {
@@ -38,15 +39,16 @@ const footerLinksStyle = {
 };
 
 const linkStyle = {
-  color: "#fff",
+  color: "#00adb5", // Accent color for links
   textDecoration: "none",
   margin: "0 10px",
+  transition: "color 0.3s ease", // Smooth hover effect
 };
 
 const disclaimerStyle = {
   fontSize: "12px",
   marginTop: "10px",
-  color: "#ccc",
+  color: "#b0b0b0", // Slightly lighter gray for the disclaimer text
 };
 
 export default Footer;

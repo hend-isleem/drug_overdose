@@ -1,47 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Header = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log(`Searching for: ${searchQuery}`);
-  };
-
   return (
     <header style={headerStyle}>
-      <h1>Drug Interaction Checker</h1>
-      <form onSubmit={handleSearch} style={searchFormStyle}>
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={searchInputStyle}
-        />
-        <button type="submit" style={searchButtonStyle}>
-          Search
-        </button>
-      </form>
-      <nav>
+      <div style={logoStyle}>
+        <h1 style={titleStyle}>Drug Interaction Checker</h1>
+      </div>
+      <nav style={navStyle}>
         <a href="/" style={linkStyle}>
           Home
-        </a>{" "}
-        |{" "}
+        </a>
         <a href="/input-medication" style={linkStyle}>
           Medication Input
-        </a>{" "}
-        |{" "}
+        </a>
         <a href="/logs" style={linkStyle}>
           Logs
         </a>
       </nav>
       <div style={authButtonsStyle}>
-        <a href="/register" style={linkStyle}>
+        <a href="/register" style={buttonStyle}>
           Register
         </a>
-
-        <a href="/login" style={linkStyle}>
+        <a href="/login" style={buttonStyle}>
           Login
         </a>
       </div>
@@ -50,52 +30,61 @@ const Header = () => {
 };
 
 const headerStyle = {
-  backgroundColor: "#333",
-  color: "#fff",
-  padding: "10px",
-  textAlign: "center",
+  backgroundColor: "#393e46", // Same as the footer's background color
+  color: "#eeeeee", // Light gray text color matching the footer
+  padding: "10px 20px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+  fontFamily: "'Poppins', sans-serif",
 };
 
-const linkStyle = {
-  color: "#fff",
-  textDecoration: "none",
-  margin: "0 10px",
-};
-
-const searchFormStyle = {
+const logoStyle = {
   display: "flex",
-  justifyContent: "center",
   alignItems: "center",
 };
 
-const searchInputStyle = {
-  padding: "5px",
-  width: "200px",
-  marginRight: "5px",
+const titleStyle = {
+  fontSize: "1.8rem",
+  margin: "0",
+  fontWeight: "bold",
+  color: "#ffffff",
 };
 
-const searchButtonStyle = {
-  padding: "5px 10px",
-  backgroundColor: "#007BFF",
-  color: "#fff",
-  border: "none",
-  cursor: "pointer",
+const navStyle = {
+  display: "flex",
+  gap: "20px",
+};
+
+const linkStyle = {
+  color: "#eeeeee",
+  textDecoration: "none",
+  fontSize: "1rem",
+  transition: "color 0.3s ease",
 };
 
 const authButtonsStyle = {
   display: "flex",
-  gap: "10px",
+  gap: "15px",
 };
 
 const buttonStyle = {
-  backgroundColor: "#007bff",
-  color: "#fff",
+  backgroundColor: "#5c646f",
+  color: "#ffffff",
   border: "none",
-  padding: "5px 10px",
+  padding: "10px 20px",
+  borderRadius: "6px",
+  fontSize: "1rem",
   cursor: "pointer",
+  textDecoration: "none",
+  textAlign: "center",
+  transition: "background-color 0.3s ease, transform 0.2s ease",
+  width: "120px",
+  height: "29px",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
 export default Header;

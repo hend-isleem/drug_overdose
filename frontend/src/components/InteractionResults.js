@@ -9,7 +9,10 @@ const InteractionReport = () => {
     <div style={styles.container}>
       <h1 style={styles.header}>Drug Interaction Report</h1>
       {interactions.length === 0 ? (
-        <p>No interactions found. Please try again.</p>
+        <p style={styles.noInteractions}>
+          No known interactions for the selected medications. Always consult
+          with a healthcare provider for more details.
+        </p>
       ) : (
         interactions.map((interaction, index) => (
           <div
@@ -19,7 +22,7 @@ const InteractionReport = () => {
               borderLeftColor: getLevelColor(interaction.severity),
             }}
           >
-            <h2 style={styles.severity}>{interaction.severity}</h2>
+            <h2 style={styles.severity}>{interaction.severity} Interaction</h2>
             <h3>Drugs: {interaction.drugs.split("  ").join(" | ")}</h3>
             <p style={styles.description}>{interaction.description}</p>
           </div>
@@ -89,10 +92,10 @@ const getLevelColor = (level) => {
 const styles = {
   container: {
     padding: "20px",
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#393e46",
   },
   header: {
-    color: "#333",
+    color: "white",
     textAlign: "center",
   },
   interactionCard: {

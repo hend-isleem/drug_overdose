@@ -55,6 +55,17 @@ const MedicationInputForm = () => {
 
       if (response.status === 200) {
         const data = response.data;
+
+        // Save to logs as history
+        const existingLogs = JSON.parse(localStorage.getItem("logs")) || [];
+        const newLog = {
+          id: Date.now(),
+          medications: drugList,
+          date: new Date().toLocaleString(),
+        };
+        existingLogs.push(newLog);
+        localStorage.setItem("logs", JSON.stringify(existingLogs));
+
         navigate("/interaction-results", { state: { interactions: data.interactions } }); 
       } else {
         setError(response.message || "An error occurred. Please try again.");
@@ -112,9 +123,9 @@ const MedicationInputForm = () => {
         <button
           onClick={handleCheckInteractions}
           style={
-            drugList.length === 0 ? disabledCheckButtonStyle : checkButtonStyle
+            drugList.length < 2 ? disabledCheckButtonStyle : checkButtonStyle
           }
-          disabled={drugList.length === 0}
+          disabled={drugList.length < 2}
         >
           Check Interactions
         </button>
@@ -137,25 +148,29 @@ const LoadingOverlay = () => (
 
 // Styling
 const containerStyle = {
-  width: "500px",
-  margin: "0 auto",
-  padding: "20px",
-  backgroundColor: "#f9f9f9",
-  borderRadius: "8px",
-  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-  textAlign: "center",
+  width: "100%",
+  maxWidth: "400px", // Matches signup form
+  margin: "50px auto", // Centers like the signup form
+  padding: "30px",
+  backgroundColor: "#393e46", // Matches signup form background
+  borderRadius: "10px",
+  color: "#eeeeee", // Light text for readability
+  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Similar shadow effect
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 };
 
 const headingStyle = {
   fontSize: "24px",
   marginBottom: "10px",
-  color: "#333",
+  color: "#eeeeee", // Matches text color with other forms
 };
 
 const descriptionStyle = {
   fontSize: "16px",
   marginBottom: "20px",
-  color: "#555",
+  color: "#cccccc", // Slightly lighter text for description
 };
 
 const inputContainerStyle = {
@@ -163,29 +178,33 @@ const inputContainerStyle = {
   justifyContent: "center",
   alignItems: "center",
   marginBottom: "20px",
+  width: "100%",
 };
 
 const inputStyle = {
+  width: "100%",
   padding: "10px",
-  fontSize: "16px",
-  borderRadius: "4px",
-  border: "1px solid #ccc",
-  width: "70%",
+  border: "1px solid #eeeeee", // Matches input borders to the form's aesthetic
+  borderRadius: "5px",
+  backgroundColor: "#222831", // Dark background for inputs
+  color: "#ffffff", // Light text for readability
+  boxSizing: "border-box", // Ensures consistent alignment
 };
 
 const addButtonStyle = {
   padding: "10px 15px",
   marginLeft: "10px",
-  backgroundColor: "#4CAF50",
-  color: "#fff",
+  backgroundColor: "#00adb5", // Accent color matching other forms
+  color: "#ffffff",
   border: "none",
-  borderRadius: "4px",
+  borderRadius: "5px",
   cursor: "pointer",
   fontSize: "16px",
 };
 
 const listContainerStyle = {
   marginBottom: "20px",
+  width: "100%", // Ensures consistent width alignment
 };
 
 const ulStyle = {
@@ -198,7 +217,7 @@ const liStyle = {
   justifyContent: "space-between",
   alignItems: "center",
   padding: "10px 0",
-  borderBottom: "1px solid #ccc",
+  borderBottom: "1px solid #444", // Darker border for consistency
 };
 
 const removeButtonStyle = {
@@ -212,33 +231,32 @@ const removeButtonStyle = {
 
 const buttonContainerStyle = {
   display: "flex",
-  justifyContent: "center",
+  justifyContent: "space-between",
+  width: "100%", // Matches width with container
   gap: "10px",
 };
 
 const checkButtonStyle = {
   padding: "10px 20px",
-  backgroundColor: "#007BFF",
-  color: "#fff",
+  backgroundColor: "#00adb5", // Accent color
+  color: "#ffffff",
   border: "none",
-  borderRadius: "4px",
+  borderRadius: "5px",
   cursor: "pointer",
 };
 
 const resetButtonStyle = {
   padding: "10px 20px",
-  backgroundColor: "#888",
-  color: "#fff",
+  backgroundColor: "#5c646f", // Neutral button color
+  color: "#ffffff",
   border: "none",
-  borderRadius: "4px",
+  borderRadius: "5px",
   cursor: "pointer",
 };
+
 const disabledCheckButtonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#cccccc",
-  color: "#fff",
-  border: "none",
-  borderRadius: "4px",
+  ...checkButtonStyle,
+  backgroundColor: "#cccccc", // Disabled background color
   cursor: "not-allowed",
 };
 const overlayStyle = {

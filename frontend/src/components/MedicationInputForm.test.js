@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import MedicationInputForm from "./MedicationInputForm";
 
 describe("MedicationInputForm", () => {
-  test("allows a user to add a drug to the list", () => {
+  test("allows a user to add drugs to the list", () => {
     render(
       <Router>
         <MedicationInputForm />
@@ -18,6 +18,31 @@ describe("MedicationInputForm", () => {
     fireEvent.click(addButton);
 
     expect(screen.getByText("Aspirin")).toBeInTheDocument();
+  });
+
+  test("enables 'Check Interactions' button only after adding two drugs", () => {
+    render(
+      <Router>
+        <MedicationInputForm />
+      </Router>
+    );
+
+    const input = screen.getByPlaceholderText("Enter a drug name");
+    const addButton = screen.getByText("Add");
+    const checkButton = screen.getByText("Check Interactions");
+
+    // Initially, the button should be disabled
+    expect(checkButton).toBeDisabled();
+
+    // Add the first drug
+    fireEvent.change(input, { target: { value: "Aspirin" } });
+    fireEvent.click(addButton);
+    expect(checkButton).toBeDisabled(); // Button still disabled after one drug
+
+    // Add the second drug
+    fireEvent.change(input, { target: { value: "Ibuprofen" } });
+    fireEvent.click(addButton);
+    expect(checkButton).toBeEnabled(); // Button should be enabled now
   });
 
   test("allows a user to remove a drug from the list", () => {
@@ -57,9 +82,7 @@ describe("MedicationInputForm", () => {
     expect(screen.queryByText("Aspirin")).toBeNull();
   });
 
-  // New tests to detect incorrect behaviors
-
-  test("detects if drug is not added to the list after clicking Add", () => {
+  test("disables 'Check Interactions' button after resetting the drug list", () => {
     render(
       <Router>
         <MedicationInputForm />
@@ -68,74 +91,22 @@ describe("MedicationInputForm", () => {
 
     const input = screen.getByPlaceholderText("Enter a drug name");
     const addButton = screen.getByText("Add");
-
-    fireEvent.change(input, { target: { value: "Aspirin" } });
-    fireEvent.click(addButton);
-
-    // Intentionally expect "Aspirin" not to be in the document, simulating a failure to add
-    if (!screen.queryByText("Aspirin")) {
-      console.log(
-        "Test detected that the drug was not added as expected. Passing the test as detection of incorrect behavior."
-      );
-      expect(screen.queryByText("Aspirin")).toBeNull();
-    } else {
-      // Expect drug to be present, as this is the correct behavior
-      expect(screen.getByText("Aspirin")).toBeInTheDocument();
-    }
-  });
-
-  test("detects if drug is not removed from the list after clicking Remove", () => {
-    render(
-      <Router>
-        <MedicationInputForm />
-      </Router>
-    );
-
-    const input = screen.getByPlaceholderText("Enter a drug name");
-    const addButton = screen.getByText("Add");
-
-    fireEvent.change(input, { target: { value: "Aspirin" } });
-    fireEvent.click(addButton);
-
-    const removeButton = screen.getByText("✖");
-    fireEvent.click(removeButton);
-
-    // Intentionally expect "Aspirin" to remain in the document, simulating a failure to remove
-    if (screen.queryByText("Aspirin")) {
-      console.log(
-        "Test detected that the drug was not removed as expected. Passing the test as detection of incorrect behavior."
-      );
-      expect(screen.getByText("Aspirin")).toBeInTheDocument();
-    } else {
-      // Expect drug to be removed, as this is the correct behavior
-      expect(screen.queryByText("Aspirin")).toBeNull();
-    }
-  });
-
-  test("detects if reset button does not clear the drug list", () => {
-    render(
-      <Router>
-        <MedicationInputForm />
-      </Router>
-    );
-
-    const input = screen.getByPlaceholderText("Enter a drug name");
-    const addButton = screen.getByText("Add");
+    const checkButton = screen.getByText("Check Interactions");
     const resetButton = screen.getByText("Start over");
 
+    // Add two drugs
     fireEvent.change(input, { target: { value: "Aspirin" } });
     fireEvent.click(addButton);
+    fireEvent.change(input, { target: { value: "Ibuprofen" } });
+    fireEvent.click(addButton);
+
+    // Button should be enabled
+    expect(checkButton).toBeEnabled();
+
+    // Reset the drug list
     fireEvent.click(resetButton);
 
-    // Intentionally expect "Aspirin" to remain in the document, simulating a failure to reset
-    if (screen.queryByText("Aspirin")) {
-      console.log(
-        "Test detected that the drug list was not reset as expected. Passing the test as detection of incorrect behavior."
-      );
-      expect(screen.getByText("Aspirin")).toBeInTheDocument();
-    } else {
-      // Expect drug list to be cleared, as this is the correct behavior
-      expect(screen.queryByText("Aspirin")).toBeNull();
-    }
+    // Button should be disabled again
+    expect(checkButton).toBeDisabled();
   });
 });
