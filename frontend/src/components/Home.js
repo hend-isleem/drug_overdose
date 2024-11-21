@@ -16,7 +16,7 @@ const Home = () => {
   return (
     <div style={pageStyle}>
       <div style={contentContainerStyle}>
-        <h1 style={headingStyle}>Welcome to the Drug Interaction Checker ✨</h1>
+        <h1 style={headingStyle}>Welcome to the Drug Interaction Checker </h1>
         <p style={subHeadingStyle}>
           Easily check for potential interactions between your medications.
         </p>
@@ -121,3 +121,5 @@ const authButtonStyle = {
   textAlign: "center",
 };
 export default Home;
+
+

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const navigate = useNavigate();
@@ -39,6 +40,10 @@ const LoginForm = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
   return (
     <div style={pageContainerStyle}>
       <div style={formContainerStyle}>
@@ -61,14 +66,22 @@ const LoginForm = () => {
             <label htmlFor="password" style={labelStyle}>
               Password:
             </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={inputStyle}
-              required
-            />
+            <div style={passwordContainerStyle}>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={passwordInputStyle}
+                required
+              />
+              <span
+                onClick={togglePasswordVisibility}
+                style={toggleVisibilityStyle}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </span>
+            </div>
           </div>
           <button type="submit" style={submitButtonStyle}>
             Login
@@ -90,7 +103,6 @@ const LoginForm = () => {
 };
 
 // Styles
-
 const pageContainerStyle = {
   display: "flex",
   justifyContent: "center",
@@ -147,6 +159,24 @@ const inputStyle = {
   boxSizing: "border-box",
 };
 
+const passwordContainerStyle = {
+  position: "relative",
+};
+
+const passwordInputStyle = {
+  ...inputStyle,
+  paddingRight: "40px",
+};
+
+const toggleVisibilityStyle = {
+  position: "absolute",
+  right: "10px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  cursor: "pointer",
+  color: "#eeeeee",
+};
+
 const submitButtonStyle = {
   width: "100%",
   padding: "10px",
@@ -197,3 +227,4 @@ const popupMessageStyle = {
 };
 
 export default LoginForm;
+

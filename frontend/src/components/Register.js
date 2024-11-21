@@ -4,6 +4,7 @@ const RegisterForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [error, setError] = useState("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -21,6 +22,10 @@ const RegisterForm = () => {
     } else {
       setError("Please fill in all fields.");
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
   };
 
   return (
@@ -58,14 +63,22 @@ const RegisterForm = () => {
             <label htmlFor="password" style={labelStyle}>
               Password:
             </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={inputStyle}
-              required
-            />
+            <div style={passwordContainerStyle}>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={passwordInputStyle}
+                required
+              />
+              <span
+                onClick={togglePasswordVisibility}
+                style={toggleVisibilityStyle}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </span>
+            </div>
           </div>
           <button type="submit" style={submitButtonStyle}>
             Register
@@ -144,6 +157,24 @@ const inputStyle = {
   color: "#ffffff",
   boxSizing: "border-box",
   marginTop: "5px",
+};
+
+const passwordContainerStyle = {
+  position: "relative",
+};
+
+const passwordInputStyle = {
+  ...inputStyle,
+  paddingRight: "40px",
+};
+
+const toggleVisibilityStyle = {
+  position: "absolute",
+  right: "10px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  cursor: "pointer",
+  color: "#eeeeee",
 };
 
 const submitButtonStyle = {
