@@ -21,7 +21,7 @@ function MedicationInputForm() {
       navigate('/')
       setIsLoggedIn(false)
     }
-  }, [])
+  }, [localStorage.getItem('user')])
   const handleChange = (e) => {
     setCurrentDrug(e.target.value)
   }
@@ -54,15 +54,14 @@ function MedicationInputForm() {
         navigate('/interaction-results', {
           state: { interactions: data.interactions },
         })
-      } else {
-        if (response && response.status === 401) {
-          alert('Session expired. Please log in again.')
-          navigate('/login')
-        }
-        setError(response.message || 'An error occurred. Please try again.')
       }
     } catch (err) {
-      setError(err.message || 'An error occurred. Please try again.')
+      if (err.response.status === 401) {
+        localStorage.removeItem('user')
+        alert('Session expired. Please log in again.')
+        navigate('/login')
+      }
+      setError(err.response.data.message)
     } finally {
       setLoading(false)
     }

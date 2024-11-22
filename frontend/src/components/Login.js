@@ -33,7 +33,7 @@ function LoginForm() {
         }, 2000)
       }
     } catch (err) {
-      setError('Invalid credentials or server error. Please try again.')
+      setError(err.response.data.message)
     }
   }
   return (

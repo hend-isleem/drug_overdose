@@ -20,7 +20,7 @@ function Logs() {
       setIsLoggedIn(false)
       setLoading(false)
     }
-  }, [])
+  }, [localStorage.getItem('user')])
   useEffect(() => {
     const handleGetLogs = async () => {
       if (!isLoggedIn || !accessToken) return
@@ -32,20 +32,20 @@ function Logs() {
         })
         if (response.status === 200) {
           setLogs(response.data.documents || [])
-        } else if (response.status === 401) {
-          alert('Session expired. Please log in again.')
-          navigate('/login')
-        } else {
-          setError(response.message || 'An error occurred. Please try again.')
         }
       } catch (err) {
-        setError(err.message || 'An error occurred. Please try again.')
+        if (err.response.status === 401) {
+          localStorage.removeItem('user')
+          alert('Session expired. Please log in again.')
+          navigate('/login')
+        }
+        setError(err.response.data.message)
       } finally {
         setLoading(false)
       }
     }
     handleGetLogs()
-  }, [isLoggedIn, accessToken, navigate])
+  }, [])
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col items-center justify-center text-gray-200 p-6 font-poppins">
       <h2 className="text-2xl font-bold mb-6">Latest Checks</h2>
