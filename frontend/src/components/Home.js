@@ -16,7 +16,7 @@ const Home = () => {
   return (
     <div style={pageStyle}>
       <div style={contentContainerStyle}>
-        <h1 style={headingStyle}>Welcome to the Drug Interaction Checker ✨</h1>
+        <h1 style={headingStyle}>Welcome to the Drug Interaction Checker</h1>
         <p style={subHeadingStyle}>
           Easily check for potential interactions between your medications.
         </p>
@@ -29,14 +29,14 @@ const Home = () => {
             <h2 style={promptStyle}>
               Please log in to access the Drug Interaction Checker
             </h2>
-            <div style={authButtonsContainerStyle}>
+            {/* <div style={authButtonsContainerStyle}>
               <Link to="/register" style={authButtonStyle}>
                 Register
               </Link>
               <Link to="/login" style={authButtonStyle}>
                 Login
               </Link>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
@@ -100,24 +100,24 @@ const buttonStyle = {
   textAlign: "center",
 };
 
-const authButtonsContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "10px",
-};
+// const authButtonsContainerStyle = {
+//   display: "flex",
+//   justifyContent: "center",
+//   gap: "10px",
+// };
 
-const authButtonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#5c646f",
-  color: "#ffffff",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  textDecoration: "none",
-  borderRadius: "5px",
-  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-  transition: "background-color 0.3s ease, transform 0.3s ease",
-  cursor: "pointer",
-  width: "150px",
-  textAlign: "center",
-};
+// const authButtonStyle = {
+//   padding: "10px 20px",
+//   backgroundColor: "#5c646f",
+//   color: "#ffffff",
+//   fontSize: "1rem",
+//   fontWeight: "bold",
+//   textDecoration: "none",
+//   borderRadius: "5px",
+//   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+//   transition: "background-color 0.3s ease, transform 0.3s ease",
+//   cursor: "pointer",
+//   width: "150px",
+//   textAlign: "center",
+// };
 export default Home;
