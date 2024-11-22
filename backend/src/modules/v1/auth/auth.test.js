@@ -44,10 +44,7 @@ describe('Auth Routes', async function () {
     })
 
     it('should return validation error for invalid data', async () => {
-      const res = await request.post('/v1/auth/register').send({
-        email: 'invalidemail',
-        password: 'short'
-      })
+      const res = await request.post('/v1/auth/register').send({ email: 'invalidemail', password: 'short' })
       expect(res.status).to.equal(httpStatus.BAD_REQUEST)
     })
   })
@@ -55,20 +52,14 @@ describe('Auth Routes', async function () {
   // Test Login
   describe('POST /login', () => {
     it('should login a registered user', async () => {
-      const res = await request.post('/v1/auth/login').send({
-        email: userData.email,
-        password: userData.password
-      })
+      const res = await request.post('/v1/auth/login').send({ email: userData.email, password: userData.password })
       expect(res.status).to.equal(httpStatus.OK)
       expect(res.body).to.have.property('tokens')
       userToken = res.body.tokens.refresh.token
     })
 
     it('should return error for incorrect credentials', async () => {
-      const res = await request.post('/v1/auth/login').send({
-        email: userData.email,
-        password: 'WrongPassword123'
-      })
+      const res = await request.post('/v1/auth/login').send({ email: userData.email, password: 'WrongPassword123' })
       expect(res.status).to.equal(httpStatus.BAD_REQUEST)
     })
   })
@@ -82,10 +73,7 @@ describe('Auth Routes', async function () {
     })
 
     it('should not allow non-admin users to login as admin', async () => {
-      const res = await request.post('/v1/auth/admin-login').send({
-        email: userData.email,
-        password: userData.password
-      })
+      const res = await request.post('/v1/auth/admin-login').send({ email: userData.email, password: userData.password })
       expect(res.status).to.equal(httpStatus.BAD_REQUEST)
     })
   })
@@ -134,20 +122,16 @@ describe('Auth Routes', async function () {
   // Test Reset Password
   describe('POST /reset-password', () => {
     it('should reset password with valid code', async () => {
-      const res = await request.post('/v1/auth/reset-password').send({
-        email: userData.email,
-        password: 'NewStrongP@ssw0rd',
-        code: resetCode
-      })
+      const res = await request
+        .post('/v1/auth/reset-password')
+        .send({ email: userData.email, password: 'NewStrongP@ssw0rd', code: resetCode })
       expect(res.status).to.equal(httpStatus.OK)
     })
 
     it('should return error for invalid code', async () => {
-      const res = await request.post('/v1/auth/reset-password').send({
-        email: userData.email,
-        password: 'NewStrongP@ssw0rd',
-        code: 'invalid-code'
-      })
+      const res = await request
+        .post('/v1/auth/reset-password')
+        .send({ email: userData.email, password: 'NewStrongP@ssw0rd', code: 'invalid-code' })
       expect(res.status).to.equal(httpStatus.NOT_FOUND)
     })
   })
