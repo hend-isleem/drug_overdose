@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
-const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
+function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [username, setUsername] = useState('')
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem('user'))
     if (user && user.email) {
-      setIsLoggedIn(true);
-      setUsername(user.name);
+      setIsLoggedIn(true)
+      setUsername(user.name)
     }
-  }, []);
+  }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    setIsLoggedIn(false);
-    setUsername("");
-    window.location.reload();
-  };
+    localStorage.removeItem('user')
+    setIsLoggedIn(false)
+    setUsername('')
+    window.location.reload()
+  }
 
   return (
     <header style={headerStyle}>
@@ -56,71 +56,71 @@ const Header = () => {
         )}
       </div>
     </header>
-  );
-};
+  )
+}
 
 // Styles
 const headerStyle = {
-  backgroundColor: "#393e46",
-  color: "#eeeeee",
-  padding: "10px 20px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+  backgroundColor: '#393e46',
+  color: '#eeeeee',
+  padding: '10px 20px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
   fontFamily: "'Poppins', sans-serif",
-};
+}
 
 const logoStyle = {
-  display: "flex",
-  alignItems: "center",
-};
+  display: 'flex',
+  alignItems: 'center',
+}
 
 const titleStyle = {
-  fontSize: "1.8rem",
-  margin: "0",
-  fontWeight: "bold",
-  color: "#ffffff",
-};
+  fontSize: '1.8rem',
+  margin: '0',
+  fontWeight: 'bold',
+  color: '#ffffff',
+}
 
 const navStyle = {
-  display: "flex",
-  gap: "20px",
-};
+  display: 'flex',
+  gap: '20px',
+}
 
 const linkStyle = {
-  color: "#eeeeee",
-  textDecoration: "none",
-  fontSize: "1rem",
-  transition: "color 0.3s ease",
-};
+  color: '#eeeeee',
+  textDecoration: 'none',
+  fontSize: '1rem',
+  transition: 'color 0.3s ease',
+}
 
 const authButtonsStyle = {
-  display: "flex",
-  gap: "15px",
-};
+  display: 'flex',
+  gap: '15px',
+}
 
 const buttonStyle = {
-  backgroundColor: "#5c646f",
-  color: "#ffffff",
-  border: "none",
-  padding: "10px 20px",
-  borderRadius: "6px",
-  fontSize: "1rem",
-  cursor: "pointer",
-  textDecoration: "none",
-  textAlign: "center",
-  transition: "background-color 0.3s ease, transform 0.2s ease",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
+  backgroundColor: '#5c646f',
+  color: '#ffffff',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: '6px',
+  fontSize: '1rem',
+  cursor: 'pointer',
+  textDecoration: 'none',
+  textAlign: 'center',
+  transition: 'background-color 0.3s ease, transform 0.2s ease',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}
 
 const greetingStyle = {
-  color: "#eeeeee",
-  fontSize: "1rem",
-  marginRight: "15px",
-  alignSelf: "center",
-};
+  color: '#eeeeee',
+  fontSize: '1rem',
+  marginRight: '15px',
+  alignSelf: 'center',
+}
 
-export default Header;
+export default Header

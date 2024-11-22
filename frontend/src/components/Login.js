@@ -1,50 +1,50 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const navigate = useNavigate();
+function LoginForm() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false)
+  const navigate = useNavigate()
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setShowSuccessPopup(false);
+    e.preventDefault()
+    setError('')
+    setShowSuccessPopup(false)
 
     try {
-      const response = await axios.post("http://localhost:3001/v1/auth/login", {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post('http://localhost:3001/v1/auth/login', {
+        email,
+        password,
+      })
 
       if (response.data.tokens && response.data.tokens.access.token) {
-        const { access } = response.data.tokens;
+        const { access } = response.data.tokens
 
         const user = {
-          email: email,
+          email,
           token: access.token,
-          name: response.data.user?.name || "User",
-        };
+          name: response.data.user?.name || 'User',
+        }
 
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user))
 
-        setShowSuccessPopup(true);
+        setShowSuccessPopup(true)
         setTimeout(() => {
-          setShowSuccessPopup(false);
-          navigate("/");
-          window.location.reload();
-        }, 2000);
+          setShowSuccessPopup(false)
+          navigate('/')
+          window.location.reload()
+        }, 2000)
       } else {
-        alert("Login failed: Invalid response from server.");
+        alert('Login failed: Invalid response from server.')
       }
     } catch (err) {
-      console.log(err);
-      setError("Invalid credentials or server error. Please try again.");
+      console.log(err)
+      setError('Invalid credentials or server error. Please try again.')
     }
-  };
+  }
 
   return (
     <div style={pageContainerStyle}>
@@ -93,114 +93,114 @@ const LoginForm = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Styles
 
 const pageContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  minHeight: "100vh",
-  backgroundColor: "#222831",
-};
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: '100vh',
+  backgroundColor: '#222831',
+}
 
 const formContainerStyle = {
-  width: "100%",
-  maxWidth: "400px",
-  padding: "30px",
-  backgroundColor: "#393e46",
-  borderRadius: "10px",
-  color: "#eeeeee",
-  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-};
+  width: '100%',
+  maxWidth: '400px',
+  padding: '30px',
+  backgroundColor: '#393e46',
+  borderRadius: '10px',
+  color: '#eeeeee',
+  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+}
 
 const formTitleStyle = {
-  textAlign: "center",
-  marginBottom: "20px",
-  fontSize: "1.5rem",
-  color: "#ffffff",
-};
+  textAlign: 'center',
+  marginBottom: '20px',
+  fontSize: '1.5rem',
+  color: '#ffffff',
+}
 
 const formStyle = {
-  display: "flex",
-  flexDirection: "column",
-  width: "100%",
-};
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+}
 
 const inputGroupStyle = {
-  marginBottom: "15px",
-  width: "100%",
-};
+  marginBottom: '15px',
+  width: '100%',
+}
 
 const labelStyle = {
-  marginBottom: "5px",
-  display: "block",
-  fontSize: "1rem",
-  color: "#eeeeee",
-};
+  marginBottom: '5px',
+  display: 'block',
+  fontSize: '1rem',
+  color: '#eeeeee',
+}
 
 const inputStyle = {
-  width: "100%",
-  padding: "10px",
-  border: "1px solid #eeeeee",
-  borderRadius: "5px",
-  backgroundColor: "#222831",
-  color: "#ffffff",
-  boxSizing: "border-box",
-};
+  width: '100%',
+  padding: '10px',
+  border: '1px solid #eeeeee',
+  borderRadius: '5px',
+  backgroundColor: '#222831',
+  color: '#ffffff',
+  boxSizing: 'border-box',
+}
 
 const submitButtonStyle = {
-  width: "100%",
-  padding: "10px",
-  backgroundColor: "#00adb5",
-  color: "#ffffff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  fontSize: "1rem",
-  transition: "background-color 0.3s ease",
-};
+  width: '100%',
+  padding: '10px',
+  backgroundColor: '#00adb5',
+  color: '#ffffff',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  fontSize: '1rem',
+  transition: 'background-color 0.3s ease',
+}
 
 const errorStyle = {
-  color: "red",
-  marginTop: "10px",
-  textAlign: "center",
-};
+  color: 'red',
+  marginTop: '10px',
+  textAlign: 'center',
+}
 
 const popupContainerStyle = {
-  position: "fixed",
-  top: "0",
-  left: "0",
-  width: "100%",
-  height: "100%",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: "1000",
-};
+  position: 'fixed',
+  top: '0',
+  left: '0',
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: '1000',
+}
 
 const popupStyle = {
-  backgroundColor: "#ffffff",
-  padding: "20px",
-  borderRadius: "8px",
-  textAlign: "center",
-};
+  backgroundColor: '#ffffff',
+  padding: '20px',
+  borderRadius: '8px',
+  textAlign: 'center',
+}
 
 const popupIconStyle = {
-  fontSize: "40px",
-  color: "rgb(0, 123, 255)",
-};
+  fontSize: '40px',
+  color: 'rgb(0, 123, 255)',
+}
 
 const popupMessageStyle = {
-  fontSize: "18px",
-  marginTop: "10px",
-  color: "green",
-};
+  fontSize: '18px',
+  marginTop: '10px',
+  color: 'green',
+}
 
-export default LoginForm;
+export default LoginForm
