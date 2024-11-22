@@ -25,10 +25,12 @@ const LoginForm = () => {
           "user",
           JSON.stringify({ email, token: response.data.tokens.access.token })
         );
+
         setShowSuccessPopup(true);
         setTimeout(() => {
           setShowSuccessPopup(false);
           navigate("/");
+          window.location.reload();
         }, 2000);
       } else {
         alert("Login failed: Invalid response from server.");
