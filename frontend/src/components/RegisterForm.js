@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 function RegisterForm() {
@@ -46,6 +46,22 @@ function RegisterForm() {
       setLoading(false)
     }
   }
+  useEffect(() => {
+    const checkUserStatus = () => {
+      const user = localStorage.getItem('user')
+      if (user) navigate('/medication-input')
+    }
+    checkUserStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkUserStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
   return (
     <div className="flex justify-center items-center bg-gray-900">
       <div className="bg-gray-800 rounded-lg shadow-lg text-gray-200 w-144 p-10 mt-24">

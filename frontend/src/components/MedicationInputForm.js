@@ -13,15 +13,27 @@ function MedicationInputForm() {
   const [accessToken, setAccessToken] = useState('')
   const navigate = useNavigate()
   useEffect(() => {
-    const user = localStorage.getItem('user')
-    if (user) {
-      setAccessToken(JSON.parse(user).token)
-      setIsLoggedIn(true)
-    } else {
-      navigate('/')
-      setIsLoggedIn(false)
+    const checkUserStatus = () => {
+      const user = localStorage.getItem('user')
+      if (user) {
+        setAccessToken(JSON.parse(user).token)
+        setIsLoggedIn(true)
+      } else {
+        navigate('/')
+        setIsLoggedIn(false)
+      }
     }
-  }, [localStorage.getItem('user')])
+    checkUserStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkUserStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
   const handleChange = (e) => {
     setCurrentDrug(e.target.value)
   }
@@ -56,12 +68,12 @@ function MedicationInputForm() {
         })
       }
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         localStorage.removeItem('user')
         alert('Session expired. Please log in again.')
         navigate('/login')
       }
-      setError(err.response.data.message)
+      setError(err.response?.data?.message || 'An error occurred.')
     } finally {
       setLoading(false)
     }

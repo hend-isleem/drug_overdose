@@ -10,17 +10,27 @@ function Logs() {
   const [accessToken, setAccessToken] = useState('')
   const navigate = useNavigate()
   useEffect(() => {
-    const user = localStorage.getItem('user')
-    if (user) {
-      const parsedUser = JSON.parse(user)
-      setAccessToken(parsedUser.token)
-      setIsLoggedIn(true)
-    } else {
-      navigate('/')
-      setIsLoggedIn(false)
-      setLoading(false)
+    const checkUserStatus = () => {
+      const user = localStorage.getItem('user')
+      setIsLoggedIn(!!user)
+      if (user) {
+        setAccessToken(JSON.parse(user).token)
+      } else {
+        navigate('/')
+        setLoading(false)
+      }
     }
-  }, [localStorage.getItem('user')])
+    checkUserStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkUserStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
   useEffect(() => {
     const handleGetLogs = async () => {
       if (!isLoggedIn || !accessToken) return
@@ -34,18 +44,18 @@ function Logs() {
           setLogs(response.data.documents || [])
         }
       } catch (err) {
-        if (err.response.status === 401) {
+        if (err.response && err.response.status === 401) {
           localStorage.removeItem('user')
           alert('Session expired. Please log in again.')
           navigate('/login')
         }
-        setError(err.response.data.message)
+        setError(err.response?.data?.message || 'An error occurred.')
       } finally {
         setLoading(false)
       }
     }
     handleGetLogs()
-  }, [])
+  }, [isLoggedIn, accessToken, navigate])
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col items-center justify-center text-gray-200 p-6 font-poppins">
       <h2 className="text-2xl font-bold mb-6">Latest Checks</h2>

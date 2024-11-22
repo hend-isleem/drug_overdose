@@ -3,13 +3,21 @@ import React, { useEffect, useState } from 'react'
 function Footer() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   useEffect(() => {
-    const user = localStorage.getItem('user')
-    if (user) {
-      setIsLoggedIn(true)
-    } else {
-      setIsLoggedIn(false)
+    const checkLoginStatus = () => {
+      const user = localStorage.getItem('user')
+      setIsLoggedIn(!!user)
     }
-  }, [localStorage.getItem('user')])
+    checkLoginStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkLoginStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [])
   return (
     <footer className="bg-gray-800 text-gray-200 p-5 text-center border-t border-gray-700 mt-auto font-poppins">
       <p>&copy; 2024 Drug-Drug Interactions Checker. All rights reserved.</p>

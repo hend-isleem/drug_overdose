@@ -4,9 +4,21 @@ import { Link, useNavigate } from 'react-router-dom'
 function Home() {
   const navigate = useNavigate()
   useEffect(() => {
-    const user = localStorage.getItem('user')
-    if (user) navigate('/medication-input')
-  }, [localStorage.getItem('user')])
+    const checkUserStatus = () => {
+      const user = localStorage.getItem('user')
+      if (user) navigate('/medication-input')
+    }
+    checkUserStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkUserStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
   return (
     <div className="bg-gray-900 flex justify-center items-center font-poppins">
       <div className="text-center text-gray-200 bg-gray-800 rounded-lg shadow-lg w-144 p-10 mt-28">

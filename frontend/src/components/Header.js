@@ -4,17 +4,31 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [username, setUsername] = useState('')
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'))
-    if (user && user.email) {
-      setIsLoggedIn(true)
-      setUsername(user.name)
+    const checkLoginStatus = () => {
+      const user = JSON.parse(localStorage.getItem('user'))
+      setIsLoggedIn(!!user)
+      setUsername(user?.name || '')
     }
-  }, [localStorage.getItem('user')])
+    checkLoginStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkLoginStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [])
   const handleLogout = () => {
     localStorage.removeItem('user')
-    setIsLoggedIn(false)
-    setUsername('')
-    window.location.reload()
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: 'user',
+        oldValue: JSON.stringify({ name: username }),
+        newValue: null,
+      })
+    )
   }
   return (
     <header className="bg-gray-800 text-gray-200 p-5 flex justify-between items-center shadow-md font-poppins">
