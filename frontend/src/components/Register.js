@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
 
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
@@ -6,8 +8,10 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
     setShowSuccessPopup(false);
@@ -21,6 +25,35 @@ const RegisterForm = () => {
     } else {
       setError("Please fill in all fields.");
     }
+
+
+    try {
+      setLoading(true);
+      setError(null);
+      setShowSuccessPopup(null);
+
+      const response = await axios.post("http://localhost:3001/v1/auth/register", {
+        "name": username,
+        "email": email,
+        "password": password
+      });
+      if (response.status === 201) {
+        setShowSuccessPopup("User registered successfully!");
+        setTimeout(() => {
+          setShowSuccessPopup(false); 
+          navigate("/login"); 
+        }, 2000); 
+      } else {
+        setError(response.message || "An error occurred. Please try again.");
+      }
+    } catch (err) {
+      if (err.response.data.message){
+        setError(err.response.data.message)
+      } else setError("Network error. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+
   };
 
   return (
@@ -68,7 +101,7 @@ const RegisterForm = () => {
             />
           </div>
           <button type="submit" style={submitButtonStyle}>
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
         {error && <p style={errorStyle}>{error}</p>}
