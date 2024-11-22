@@ -22,14 +22,11 @@ function RegisterForm() {
       setLoading(true)
       setError(null)
       setShowSuccessPopup(null)
-      const response = await axios.post(
-        'http://localhost:3001/v1/auth/register',
-        {
-          name: username,
-          email,
-          password,
-        }
-      )
+      const response = await axios.post('v1/auth/register', {
+        name: username,
+        email,
+        password,
+      })
       if (response.status === 201) {
         setShowSuccessPopup('User registered successfully!')
         setTimeout(() => {

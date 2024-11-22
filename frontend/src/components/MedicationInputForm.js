@@ -45,7 +45,7 @@ function MedicationInputForm() {
       setLoading(true)
       setError(null)
       const response = await axios.post(
-        'http://localhost:3001/v1/drugs/',
+        'v1/drugs/',
         { drugs: drugList },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       )

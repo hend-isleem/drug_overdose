@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
@@ -9,6 +10,8 @@ import LoginForm from './components/Login'
 import Logs from './components/Logs'
 import MedicationInputForm from './components/MedicationInputForm'
 import RegisterForm from './components/RegisterForm'
+
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_API_URL
 
 function App() {
   return (

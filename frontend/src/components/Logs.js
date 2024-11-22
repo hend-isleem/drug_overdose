@@ -27,7 +27,7 @@ function Logs() {
       try {
         setLoading(true)
         setError(null)
-        const response = await axios.get('http://localhost:3001/v1/drugs/', {
+        const response = await axios.get('v1/drugs/', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         if (response.status === 200) {
