@@ -57,24 +57,13 @@ const MedicationInputForm = () => {
         { "drugs": drugList },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`, // Add the token here
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
 
       if (response.status === 200) {
         const data = response.data;
-
-        // Save to logs as history
-        const existingLogs = JSON.parse(localStorage.getItem("logs")) || [];
-        const newLog = {
-          id: Date.now(),
-          medications: drugList,
-          date: new Date().toLocaleString(),
-        };
-        existingLogs.push(newLog);
-        localStorage.setItem("logs", JSON.stringify(existingLogs));
-
         navigate("/interaction-results", { state: { interactions: data.interactions } }); 
       } else {
         if (response && response.status === 401) {

@@ -1,44 +1,107 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Logs = () => {
   const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [accessToken, setAccessToken] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedLogs = JSON.parse(localStorage.getItem("logs")) || [];
-    setLogs(storedLogs);
+    const user = localStorage.getItem("user");
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      setAccessToken(parsedUser.token);
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+      setLoading(false); 
+    }
   }, []);
 
-  const handleClearLogs = () => {
-    localStorage.removeItem("logs");
-    setLogs([]);
+  useEffect(() => {
+    const handleGetLogs = async () => {
+      if (!isLoggedIn) return;
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await axios.get("http://localhost:3001/v1/drugs/", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setLogs(response.data.documents || []);
+        } else {
+          if (response.status === 401) {
+            alert("Session expired. Please log in again.");
+            navigate("/login");
+          } else {
+            setError(response.message || "An error occurred. Please try again.");
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch drug interactions:", err);
+        setError(err.message || "An error occurred. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isLoggedIn && accessToken) {
+      handleGetLogs();
+    }
+  }, [isLoggedIn, accessToken, navigate]);
+
+  const handleClearLogs = async () => {
+    try {
+      await axios.delete("http://localhost:3001/v1/drugs/clear", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setLogs([]);
+    } catch (err) {
+      setError("Failed to clear logs. Please try again.");
+    }
   };
 
-  const handleLogClick = (medications) => {
-    navigate("/interaction-results", { state: { medications } });
+  const handleLogClick = (log) => {
+    console.log("Log Clicked:", log);
   };
 
   return (
     <div style={logsContainerStyle}>
       <h2 style={headingStyle}>Medication Logs</h2>
-      {logs.length > 0 ? (
-        logs.map((log) => (
-          <div
-            key={log.id}
-            style={logItemStyle}
-            onClick={() => handleLogClick(log.medications)}
-          >
-            <p style={logDateStyle}>
-              <strong>Date:</strong> {log.date}
-            </p>
-            <p style={logMedicationsStyle}>
-              <strong>Medications:</strong> {log.medications.join(", ")}
-            </p>
-          </div>
-        ))
+      {loading ? (
+        <p style={noLogsStyle}>Loading...</p>
+      ) : error ? (
+        <p style={noLogsStyle}>{error}</p>
+      ) : isLoggedIn ? (
+        logs.length > 0 ? (
+          logs.map((log) => (
+            <div
+              key={log._id}
+              style={logItemStyle}
+              onClick={() => handleLogClick(log)}
+            >
+              <p style={logDateStyle}>
+                <strong>Date:</strong> {new Date(log.createdAt).toLocaleString()}
+              </p>
+              <p style={logMedicationsStyle}>
+                <strong>Medications:</strong> {log.drugs.join(", ")}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p style={noLogsStyle}>No logs available.</p>
+        )
       ) : (
-        <p style={noLogsStyle}>No logs available</p>
+        <p style={noLogsStyle}>You have to login for logs to show.</p>
       )}
       {logs.length > 0 && (
         <button onClick={handleClearLogs} style={clearButtonStyle}>
