@@ -1,37 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.email) {
+      setIsLoggedIn(true);
+      setUsername(user.name);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUsername("");
+    window.location.reload();
+  };
+
   return (
     <header style={headerStyle}>
       <div style={logoStyle}>
         <h1 style={titleStyle}>Drug Interaction Checker</h1>
       </div>
       <nav style={navStyle}>
-        <a href="/" style={linkStyle}>
+        <Link to="/" style={linkStyle}>
           Home
-        </a>
-        <a href="/input-medication" style={linkStyle}>
+        </Link>
+        <Link to="/input-medication" style={linkStyle}>
           Medication Input
-        </a>
-        <a href="/logs" style={linkStyle}>
+        </Link>
+        <Link to="/logs" style={linkStyle}>
           Logs
-        </a>
+        </Link>
       </nav>
       <div style={authButtonsStyle}>
-        <a href="/register" style={buttonStyle}>
-          Register
-        </a>
-        <a href="/login" style={buttonStyle}>
-          Login
-        </a>
+        {isLoggedIn ? (
+          <>
+            <span style={greetingStyle}>Hello, {username}!</span>
+            <button style={buttonStyle} onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/register" style={buttonStyle}>
+              Register
+            </Link>
+            <Link to="/login" style={buttonStyle}>
+              Login
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );
 };
 
+// Styles
 const headerStyle = {
-  backgroundColor: "#393e46", // Same as the footer's background color
-  color: "#eeeeee", // Light gray text color matching the footer
+  backgroundColor: "#393e46",
+  color: "#eeeeee",
   padding: "10px 20px",
   display: "flex",
   justifyContent: "space-between",
@@ -80,11 +111,16 @@ const buttonStyle = {
   textDecoration: "none",
   textAlign: "center",
   transition: "background-color 0.3s ease, transform 0.2s ease",
-  width: "120px",
-  height: "29px",
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+};
+
+const greetingStyle = {
+  color: "#eeeeee",
+  fontSize: "1rem",
+  marginRight: "15px",
+  alignSelf: "center",
 };
 
 export default Header;

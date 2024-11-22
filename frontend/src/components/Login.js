@@ -21,14 +21,21 @@ const LoginForm = () => {
       });
 
       if (response.data.tokens && response.data.tokens.access.token) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ email, token: response.data.tokens.access.token })
-        );
+        const { access } = response.data.tokens;
+
+        const user = {
+          email: email,
+          token: access.token,
+          name: response.data.user?.name || "User",
+        };
+
+        localStorage.setItem("user", JSON.stringify(user));
+
         setShowSuccessPopup(true);
         setTimeout(() => {
           setShowSuccessPopup(false);
           navigate("/");
+          window.location.reload();
         }, 2000);
       } else {
         alert("Login failed: Invalid response from server.");
