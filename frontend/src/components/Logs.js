@@ -8,6 +8,7 @@ const Logs = () => {
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [accessToken, setAccessToken] = useState("");
+  const [selectedLog, setSelectedLog] = useState(null); // State for selected log
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,13 +19,13 @@ const Logs = () => {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
-      setLoading(false); 
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
     const handleGetLogs = async () => {
-      if (!isLoggedIn) return;
+      if (!isLoggedIn || !accessToken) return;
 
       try {
         setLoading(true);
@@ -54,24 +55,44 @@ const Logs = () => {
       }
     };
 
-    if (isLoggedIn && accessToken) {
-      handleGetLogs();
-    }
+    handleGetLogs();
   }, [isLoggedIn, accessToken, navigate]);
 
-  const handleClearLogs = async () => {
-    try {
-      await axios.delete("http://localhost:3001/v1/drugs/clear", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      setLogs([]);
-    } catch (err) {
-      setError("Failed to clear logs. Please try again.");
+  const handleLogClick = (log) => {
+    setSelectedLog(log); // Set the clicked log as selected
+  };
+
+  const getLevelColor = (level) => {
+    switch (level) {
+      case "Major":
+        return "#ff4d4d"; // Red
+      case "Moderate":
+        return "#ffac33"; // Orange
+      case "Minor":
+        return "#33cc33"; // Green
+      default:
+        return "#cccccc"; // Grey
     }
   };
 
-  const handleLogClick = (log) => {
-    console.log("Log Clicked:", log);
+  const styles = {
+    classificationCard: {
+      color: "black",
+      backgroundColor: "#fff",
+      padding: "10px",
+      margin: "10px 0",
+      borderLeft: "5px solid",
+      borderRadius: "8px",
+      boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+    },
+    level: {
+      fontSize: "18px",
+      fontWeight: "bold",
+      marginBottom: "5px",
+    },
+    description: {
+      fontSize: "16px",
+    },
   };
 
   return (
@@ -82,7 +103,42 @@ const Logs = () => {
       ) : error ? (
         <p style={noLogsStyle}>{error}</p>
       ) : isLoggedIn ? (
-        logs.length > 0 ? (
+        selectedLog ? (
+          <div>
+            <button
+              onClick={() => setSelectedLog(null)}
+              style={clearButtonStyle}
+            >
+              Back to Logs
+            </button>
+            <h2>Log Details</h2>
+            <p>
+              <strong>Date:</strong>{" "}
+              {new Date(selectedLog.createdAt).toLocaleString()}
+            </p>
+            {selectedLog.interactions && selectedLog.interactions.length > 0 ? (
+              selectedLog.interactions.map((interaction, index) => (
+                <div
+                  key={index}
+                  style={{
+                    ...styles.classificationCard,
+                    borderLeftColor: getLevelColor(interaction.severity),
+                  }}
+                >
+                  <h2 style={styles.severity}>
+                    {interaction.severity} Interaction
+                  </h2>
+                  <h3>
+                    Drugs: {interaction.drugs.split("  ").join(" | ")}
+                  </h3>
+                  <p style={styles.description}>{interaction.description}</p>
+                </div>
+              ))
+            ) : (
+              <p>No interactions available for this log.</p>
+            )}
+          </div>
+        ) : logs.length > 0 ? (
           logs.map((log) => (
             <div
               key={log._id}
@@ -103,14 +159,10 @@ const Logs = () => {
       ) : (
         <p style={noLogsStyle}>You have to login for logs to show.</p>
       )}
-      {logs.length > 0 && (
-        <button onClick={handleClearLogs} style={clearButtonStyle}>
-          Clear Logs
-        </button>
-      )}
     </div>
   );
 };
+
 
 // Styles
 const logsContainerStyle = {
@@ -166,5 +218,5 @@ const clearButtonStyle = {
   marginTop: "20px",
   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
 };
-
+  
 export default Logs;
