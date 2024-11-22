@@ -8,7 +8,7 @@ import InteractionResults from './components/InteractionResults'
 import LoginForm from './components/Login'
 import Logs from './components/Logs'
 import MedicationInputForm from './components/MedicationInputForm'
-import RegisterForm from './components/Register'
+import RegisterForm from './components/RegisterForm'
 
 function App() {
   return (
@@ -18,13 +18,13 @@ function App() {
         <div className="content" style={contentStyle}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/input-medication" element={<MedicationInputForm />} />
+            <Route path="/register" element={<RegisterForm />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/medication-input" element={<MedicationInputForm />} />
             <Route
               path="/interaction-results"
               element={<InteractionResults />}
             />
-            <Route path="/register" element={<RegisterForm />} />
-            <Route path="/login" element={<LoginForm />} />
             <Route path="/logs" element={<Logs />} />
           </Routes>
         </div>

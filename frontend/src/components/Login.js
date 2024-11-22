@@ -8,51 +8,41 @@ function LoginForm() {
   const [error, setError] = useState('')
   const [showSuccessPopup, setShowSuccessPopup] = useState(false)
   const navigate = useNavigate()
-
   const handleLogin = async (e) => {
     e.preventDefault()
     setError('')
     setShowSuccessPopup(false)
-
     try {
       const response = await axios.post('http://localhost:3001/v1/auth/login', {
         email,
         password,
       })
-
       if (response.data.tokens && response.data.tokens.access.token) {
         const { access } = response.data.tokens
-
         const user = {
           email,
           token: access.token,
           name: response.data.user?.name || 'User',
         }
-
         localStorage.setItem('user', JSON.stringify(user))
-
         setShowSuccessPopup(true)
         setTimeout(() => {
           setShowSuccessPopup(false)
           navigate('/')
           window.location.reload()
         }, 2000)
-      } else {
-        alert('Login failed: Invalid response from server.')
       }
     } catch (err) {
-      console.log(err)
       setError('Invalid credentials or server error. Please try again.')
     }
   }
-
   return (
-    <div style={pageContainerStyle}>
-      <div style={formContainerStyle}>
-        <h2 style={formTitleStyle}>Login</h2>
-        <form onSubmit={handleLogin} style={formStyle}>
-          <div style={inputGroupStyle}>
-            <label htmlFor="email" style={labelStyle}>
+    <div className="flex justify-center items-center bg-gray-900">
+      <div className="bg-gray-800 rounded-lg shadow-lg text-gray-200 flex flex-col items-center w-144 p-10 mt-28">
+        <h2 className="text-2xl font-bold text-white mb-6">Login</h2>
+        <form onSubmit={handleLogin} className="w-full flex flex-col px-10">
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-sm mb-2">
               Email:
             </label>
             <input
@@ -60,12 +50,12 @@ function LoginForm() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={inputStyle}
+              className="w-full p-2 border border-gray-300 rounded-md bg-gray-700 text-white"
               required
             />
           </div>
-          <div style={inputGroupStyle}>
-            <label htmlFor="password" style={labelStyle}>
+          <div className="mb-6">
+            <label htmlFor="password" className="block text-sm mb-2">
               Password:
             </label>
             <input
@@ -73,134 +63,38 @@ function LoginForm() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={inputStyle}
+              className="w-full p-2 border border-gray-300 rounded-md bg-gray-700 text-white"
               required
             />
           </div>
-          <button type="submit" style={submitButtonStyle}>
+          <button
+            type="submit"
+            className="w-full py-2 bg-cyan-500 text-white rounded-md hover:bg-gray-600 transition duration-300 my-2"
+          >
             Login
           </button>
         </form>
-        {error && <p style={errorStyle}>{error}</p>}
-
+        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
         {showSuccessPopup && (
-          <div style={popupContainerStyle}>
-            <div style={popupStyle}>
-              <div style={popupIconStyle}>✅</div>
-              <p style={popupMessageStyle}>Login Successful!</p>
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg text-center">
+              <div className="text-4xl text-blue-500">✅</div>
+              <p className="text-green-600 mt-4 text-lg">Login Successful!</p>
             </div>
           </div>
         )}
+        <p className="text-center mt-6">
+          New user?{' '}
+          <button
+            className="text-cyan-500 hover:underline"
+            onClick={() => navigate('/register')}
+          >
+            Please register!
+          </button>
+        </p>
       </div>
     </div>
   )
-}
-
-// Styles
-
-const pageContainerStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  minHeight: '100vh',
-  backgroundColor: '#222831',
-}
-
-const formContainerStyle = {
-  width: '100%',
-  maxWidth: '400px',
-  padding: '30px',
-  backgroundColor: '#393e46',
-  borderRadius: '10px',
-  color: '#eeeeee',
-  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-}
-
-const formTitleStyle = {
-  textAlign: 'center',
-  marginBottom: '20px',
-  fontSize: '1.5rem',
-  color: '#ffffff',
-}
-
-const formStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-}
-
-const inputGroupStyle = {
-  marginBottom: '15px',
-  width: '100%',
-}
-
-const labelStyle = {
-  marginBottom: '5px',
-  display: 'block',
-  fontSize: '1rem',
-  color: '#eeeeee',
-}
-
-const inputStyle = {
-  width: '100%',
-  padding: '10px',
-  border: '1px solid #eeeeee',
-  borderRadius: '5px',
-  backgroundColor: '#222831',
-  color: '#ffffff',
-  boxSizing: 'border-box',
-}
-
-const submitButtonStyle = {
-  width: '100%',
-  padding: '10px',
-  backgroundColor: '#00adb5',
-  color: '#ffffff',
-  border: 'none',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  fontSize: '1rem',
-  transition: 'background-color 0.3s ease',
-}
-
-const errorStyle = {
-  color: 'red',
-  marginTop: '10px',
-  textAlign: 'center',
-}
-
-const popupContainerStyle = {
-  position: 'fixed',
-  top: '0',
-  left: '0',
-  width: '100%',
-  height: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: '1000',
-}
-
-const popupStyle = {
-  backgroundColor: '#ffffff',
-  padding: '20px',
-  borderRadius: '8px',
-  textAlign: 'center',
-}
-
-const popupIconStyle = {
-  fontSize: '40px',
-  color: 'rgb(0, 123, 255)',
-}
-
-const popupMessageStyle = {
-  fontSize: '18px',
-  marginTop: '10px',
-  color: 'green',
 }
 
 export default LoginForm

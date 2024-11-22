@@ -1,54 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 function Footer() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  useEffect(() => {
+    const user = localStorage.getItem('user')
+    if (user) {
+      setIsLoggedIn(true)
+    } else {
+      setIsLoggedIn(false)
+    }
+  }, [localStorage.getItem('user')])
   return (
-    <footer style={footerStyle}>
-      <p>&copy; 2024 Drug Interaction Checker. All rights reserved.</p>
-      <div style={footerLinksStyle}>
-        <a href="/terms" style={linkStyle}>
-          Terms of Service
-        </a>
-        <a href="/privacy" style={linkStyle}>
-          Privacy Policy
-        </a>
-        <a href="/contact" style={linkStyle}>
-          Contact Us
-        </a>
-      </div>
-      <p style={disclaimerStyle}>
+    <footer className="bg-gray-800 text-gray-200 p-5 text-center border-t border-gray-700 mt-auto font-poppins">
+      <p>&copy; 2024 Drug-Drug Interactions Checker. All rights reserved.</p>
+      {isLoggedIn ? (
+        <div className="mt-3">
+          <a
+            href="/logs"
+            className="text-cyan-500 hover:text-cyan-400 mx-2 transition-colors duration-300"
+          >
+            Latest Checks
+          </a>
+        </div>
+      ) : null}
+      <p className="text-sm mt-3 text-gray-400">
         Disclaimer: This tool is for informational purposes only. Always consult
         a healthcare professional for medical advice.
       </p>
     </footer>
   )
-}
-
-// Basic styling for the footer
-const footerStyle = {
-  backgroundColor: '#393e46', // Matches the form container's color
-  color: '#eeeeee', // Light gray for text
-  padding: '20px',
-  textAlign: 'center',
-  borderTop: '1px solid #4a515d', // Subtle border to separate footer
-  marginTop: 'auto',
-  fontFamily: "'Poppins', sans-serif", // Matching the header font
-}
-
-const footerLinksStyle = {
-  marginTop: '10px',
-}
-
-const linkStyle = {
-  color: '#00adb5', // Accent color for links
-  textDecoration: 'none',
-  margin: '0 10px',
-  transition: 'color 0.3s ease', // Smooth hover effect
-}
-
-const disclaimerStyle = {
-  fontSize: '12px',
-  marginTop: '10px',
-  color: '#b0b0b0', // Slightly lighter gray for the disclaimer text
 }
 
 export default Footer
