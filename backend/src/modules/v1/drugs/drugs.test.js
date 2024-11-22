@@ -36,7 +36,9 @@ describe('Drugs Routes', async function () {
     await request.delete(`/v1/users/${userData.email}`).auth(res.body.tokens.access.token, { type: 'bearer' })
   })
 
-  describe('POST /', () => {
+  const drugId = '6739527c934ecc31f543e84c'
+
+  describe('POST /v1/drugs', () => {
     it('should return interaction warnings between the drugs', async () => {
       const res = await request
         .post('/v1/drugs')
@@ -44,7 +46,7 @@ describe('Drugs Routes', async function () {
         .send({ drugs: ['Lisinopril', 'Atorvastatin', 'Ibuprofen'] })
       expect(res.status).to.equal(httpStatus.OK)
       expect(res.body).to.deep.equal({
-        _id: '6739527c934ecc31f543e84c',
+        _id: drugId,
         drugs: ['Atorvastatin', 'Ibuprofen', 'Lisinopril'],
         name: 'Atorvastatin, Ibuprofen, Lisinopril',
         interactions: [
@@ -62,6 +64,37 @@ describe('Drugs Routes', async function () {
     it('should return validation error for missing drugs data', async () => {
       const res = await request.post('/v1/drugs').auth(userToken, { type: 'bearer' }).send()
       expect(res.status).to.equal(httpStatus.BAD_REQUEST)
+    })
+  })
+
+  // Test Query Drugs
+  describe('GET /v1/drugs', () => {
+    it('should allow authorized user to query drugs', async () => {
+      const res = await request.get('/v1/drugs').auth(userToken, { type: 'bearer' })
+      expect(res.status).to.equal(httpStatus.OK)
+      expect(res.body.count).to.be.a('number')
+      expect(res.body.pages).to.be.a('number')
+      expect(res.body.documents).to.be.an('array')
+    })
+
+    it('should not allow unauthorized user to query drugs', async () => {
+      const res = await request.get('/v1/drugs')
+      expect(res.status).to.equal(httpStatus.UNAUTHORIZED)
+    })
+  })
+
+  // Test Get Drug by ID
+  describe('GET /v1/drugs/:id', () => {
+    it('should allow authorized user to get drug by ID', async () => {
+      const res = await request.get(`/v1/drugs/${drugId}`).auth(userToken, { type: 'bearer' })
+      expect(res.status).to.equal(httpStatus.OK)
+      expect(res.body).to.have.property('_id')
+      expect(res.body._id).to.equal(drugId)
+    })
+
+    it('should return not found for invalid ID', async () => {
+      const res = await request.get('/v1/drugs/6739527c934ecc31f543e84d').auth(userToken, { type: 'bearer' })
+      expect(res.status).to.equal(httpStatus.NOT_FOUND)
     })
   })
 })
