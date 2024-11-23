@@ -1,38 +1,147 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+/* General Page Styling */
+.app {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  color: #ffffff;
+  background: linear-gradient(-45deg, #1e3c72, #2a5298, #1e3c72, #0f2027);
+  background-size: 400% 400%;
+  animation: gradientAnimation 12s ease infinite; /* Animated gradient */
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  position: relative;
 }
 
-.App-link {
-  color: #61dafb;
+/* Keyframes for Animated Gradient */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Overlay for Better Text Readability */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+  z-index: 1;
+}
+
+/* Content Container */
+.container {
+  z-index: 2;
+  text-align: center;
+  background: rgba(39, 40, 34, 0.9); /* Semi-transparent container */
+  padding: 20px 15px; /* Smaller padding */
+  border-radius: 12px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+  max-width: 400px; /* Reduced width */
+  width: 80%; /* Responsive width for smaller screens */
+}
+
+/* Heading Style */
+.container h1 {
+  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
+  font-weight: bold;
+  background: linear-gradient(90deg, #00adb5, #ffffff); /* Gradient text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Subtle shadow for contrast */
+}
+
+/* Subheading Style */
+.container p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #dddddd;
+}
+
+/* Prompt Style */
+.prompt {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #eeeeee;
+}
+
+/* Buttons */
+.primary-button,
+.secondary-button {
+  display: inline-block;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Button shadow */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+}
+
+/* Primary Button */
+.primary-button {
+  background-color: #e50914; /* Netflix red */
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background-color: #f40612; /* Slightly lighter red on hover */
+  transform: scale(1.05); /* Slight scaling */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Hover shadow */
+}
+
+/* Secondary Buttons */
+.secondary-button {
+  background-color: #333333; /* Neutral button color */
+  color: #ffffff;
+  margin: 10px;
+}
+
+.secondary-button:hover {
+  background-color: #444444;
+  transform: scale(1.05);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px 10px; /* Smaller padding on mobile */
   }
-  to {
-    transform: rotate(360deg);
+
+  .container h1 {
+    font-size: 1.8rem;
+  }
+
+  .container p {
+    font-size: 0.9rem;
+  }
+
+  .primary-button,
+  .secondary-button {
+    font-size: 0.9rem;
+    padding: 10px 20px; /* Smaller button size for mobile */
   }
 }
+
+
+

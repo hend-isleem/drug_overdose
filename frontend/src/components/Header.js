@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { FaHome, FaPills, FaBook, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 
 const Header = () => {
   return (
@@ -7,37 +9,46 @@ const Header = () => {
         <h1 style={titleStyle}>Drug Interaction Checker</h1>
       </div>
       <nav style={navStyle}>
-        <a href="/" style={linkStyle}>
+        <Link to="/" style={linkStyle}>
+          <FaHome style={iconStyle} />
           Home
-        </a>
-        <a href="/input-medication" style={linkStyle}>
+        </Link>
+        <Link to="/input-medication" style={linkStyle}>
+          <FaPills style={iconStyle} />
           Medication Input
-        </a>
-        <a href="/logs" style={linkStyle}>
+        </Link>
+        <Link to="/logs" style={linkStyle}>
+          <FaBook style={iconStyle} />
           Logs
-        </a>
+        </Link>
       </nav>
       <div style={authButtonsStyle}>
-        <a href="/register" style={buttonStyle}>
+        <Link to="/register" style={buttonStyle}>
+          <FaUserPlus style={iconStyle} />
           Register
-        </a>
-        <a href="/login" style={buttonStyle}>
+        </Link>
+        <Link to="/login" style={buttonStyle}>
+          <FaSignInAlt style={iconStyle} />
           Login
-        </a>
+        </Link>
       </div>
     </header>
   );
 };
 
+// Styles
 const headerStyle = {
-  backgroundColor: "#393e46", // Same as the footer's background color
-  color: "#eeeeee", // Light gray text color matching the footer
+  background: "linear-gradient(to right, #4e54c8, #8f94fb)", // Gradient background
+  color: "#fff",
   padding: "10px 20px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
   fontFamily: "'Poppins', sans-serif",
+  position: "sticky", // Sticks to the top on scroll
+  top: 0,
+  zIndex: 1000,
 };
 
 const logoStyle = {
@@ -58,10 +69,17 @@ const navStyle = {
 };
 
 const linkStyle = {
-  color: "#eeeeee",
+  color: "#ffffff",
   textDecoration: "none",
   fontSize: "1rem",
+  display: "flex",
+  alignItems: "center",
+  gap: "5px",
   transition: "color 0.3s ease",
+};
+
+const iconStyle = {
+  fontSize: "1.2rem",
 };
 
 const authButtonsStyle = {
@@ -70,21 +88,20 @@ const authButtonsStyle = {
 };
 
 const buttonStyle = {
-  backgroundColor: "#5c646f",
+  backgroundColor: "transparent",
   color: "#ffffff",
-  border: "none",
+  border: "2px solid #ffffff",
   padding: "10px 20px",
   borderRadius: "6px",
   fontSize: "1rem",
   cursor: "pointer",
   textDecoration: "none",
   textAlign: "center",
-  transition: "background-color 0.3s ease, transform 0.2s ease",
-  width: "120px",
-  height: "29px",
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+  transition: "background-color 0.3s ease, transform 0.2s ease",
 };
 
-export default Header; 
+export default Header;
+

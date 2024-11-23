@@ -1,42 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaHeartbeat } from "react-icons/fa";
+import "./Home.css"; // Assuming CSS is extracted for global styles
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-    if (user) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
+    setIsLoggedIn(!!user);
   }, []);
 
   return (
     <div style={pageStyle}>
-      <div style={contentContainerStyle}>
-        <h1 style={headingStyle}>Welcome to the Drug Interaction Checker </h1>
-        <p style={subHeadingStyle}>
+      <div style={particleStyle}></div>
+      <div style={overlayStyle}></div>
+      <div style={containerStyle}>
+        <FaHeartbeat style={heartIconStyle} />
+        <h1 style={titleStyle}>Welcome to the Drug Interaction Checker</h1>
+        <p style={subtitleStyle}>
           Easily check for potential interactions between your medications.
         </p>
+        <p style={additionalStatementStyle}>
+          {isLoggedIn
+            ? "Start checking now!"
+            : "Please log in to access the Drug Interaction Checker"}
+        </p>
         {isLoggedIn ? (
-          <Link to="/input-medication" style={buttonStyle}>
-            Start Checking Medications
+          <Link to="/input-medication" style={primaryButtonStyle}>
+            Start Now
           </Link>
         ) : (
-          <div>
-            <h2 style={promptStyle}>
-              Please log in to access the Drug Interaction Checker
-            </h2>
-            <div style={authButtonsContainerStyle}>
-              <Link to="/register" style={authButtonStyle}>
-                Register
-              </Link>
-              <Link to="/login" style={authButtonStyle}>
-                Login
-              </Link>
-            </div>
+          <div style={buttonGroupStyle}>
+            <Link to="/register" style={secondaryButtonStyle}>
+              Register
+            </Link>
+            <Link to="/login" style={secondaryButtonStyle}>
+              Login
+            </Link>
           </div>
         )}
       </div>
@@ -44,82 +45,130 @@ const Home = () => {
   );
 };
 
+// Styles
 const pageStyle = {
-  backgroundColor: "#222831",
+  position: "relative",
+  backgroundColor: "#0d1b2a",
   minHeight: "100vh",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   fontFamily: "'Poppins', sans-serif",
   margin: 0,
+  overflow: "hidden",
 };
 
-const contentContainerStyle = {
+const particleStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "200%",
+  height: "200%",
+  background: `
+    radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px)`,
+  backgroundSize: "80px 80px",
+  backgroundPosition: "0 0, 40px 40px",
+  animation: "moveParticles 15s linear infinite",
+  zIndex: 0,
+};
+
+const overlayStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  background: "linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8))",
+  zIndex: 1,
+};
+
+const containerStyle = {
+  zIndex: 2,
+  background: "rgba(39, 40, 34, 0.95)",
+  padding: "20px",
+  borderRadius: "12px",
   textAlign: "center",
-  color: "#eeeeee",
-  padding: "30px",
-  backgroundColor: "#393e46",
-  borderRadius: "10px",
-  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-  width: "400px",
-  maxWidth: "400px",
+  boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.5)",
+  maxWidth: "350px",
+  width: "90%",
 };
 
-const headingStyle = {
+const heartIconStyle = {
+  fontSize: "3rem",
+  color: "#00adb5",
+  marginBottom: "10px",
+};
+
+const titleStyle = {
   fontSize: "1.8rem",
   fontWeight: "bold",
-  marginBottom: "15px",
+  marginBottom: "10px",
+  background: "linear-gradient(90deg, #00adb5, #ffffff)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
 };
 
-const subHeadingStyle = {
+const subtitleStyle = {
   fontSize: "1rem",
-  marginBottom: "20px",
+  marginBottom: "10px",
   color: "#cccccc",
 };
 
-const promptStyle = {
-  fontSize: "1rem",
-  marginBottom: "20px",
-  color: "#eeeeee",
+const additionalStatementStyle = {
+  fontSize: "0.9rem",
+  marginBottom: "15px",
+  color: "#f5f5f5",
+  fontWeight: "bold",
 };
 
-const buttonStyle = {
+const primaryButtonStyle = {
   display: "inline-block",
-  padding: "10px 20px",
-  backgroundColor: "#00adb5",
+  padding: "12px 20px",
+  backgroundColor: "#e50914",
   color: "#ffffff",
   fontSize: "1rem",
   fontWeight: "bold",
-  textDecoration: "none",
   borderRadius: "5px",
-  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-  transition: "background-color 0.3s ease, transform 0.3s ease",
-  marginTop: "20px",
-  cursor: "pointer",
-  width: "150px",
-  textAlign: "center",
+  textDecoration: "none",
+  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+  transition: "all 0.3s ease",
+  marginTop: "10px",
 };
 
-const authButtonsContainerStyle = {
+const buttonGroupStyle = {
   display: "flex",
   justifyContent: "center",
   gap: "10px",
 };
 
-const authButtonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#5c646f",
+const secondaryButtonStyle = {
+  padding: "10px 15px",
+  backgroundColor: "#444444",
   color: "#ffffff",
-  fontSize: "1rem",
+  fontSize: "0.9rem",
   fontWeight: "bold",
-  textDecoration: "none",
   borderRadius: "5px",
-  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-  transition: "background-color 0.3s ease, transform 0.3s ease",
-  cursor: "pointer",
-  width: "150px",
-  textAlign: "center",
+  textDecoration: "none",
+  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+  transition: "all 0.3s ease",
 };
+
 export default Home;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
