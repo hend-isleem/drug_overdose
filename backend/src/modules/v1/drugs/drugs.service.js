@@ -9,7 +9,7 @@ const errorCode = require('../../../codes/error.code')
 const collectionName = 'drugs'
 
 const getDrugInteractions = async (inputDrugs) => {
-  let interactions
+  let interactions = []
   const crawler = scraperService.getCrawler(async ({ page }) => {
     // Navigate to the interaction input page
     await page.goto('https://www.drugs.com/interaction/list/', { waitUntil: 'commit' })
