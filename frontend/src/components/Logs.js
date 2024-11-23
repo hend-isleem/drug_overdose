@@ -1,107 +1,92 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const Logs = () => {
-  const [logs, setLogs] = useState([]);
-  const navigate = useNavigate();
-
+function Logs() {
+  const [logs, setLogs] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [accessToken, setAccessToken] = useState('')
+  const navigate = useNavigate()
   useEffect(() => {
-    const storedLogs = JSON.parse(localStorage.getItem("logs")) || [];
-    setLogs(storedLogs);
-  }, []);
-
-  const handleClearLogs = () => {
-    localStorage.removeItem("logs");
-    setLogs([]);
-  };
-
-  const handleLogClick = (medications) => {
-    navigate("/interaction-results", { state: { medications } });
-  };
-
+    const checkUserStatus = () => {
+      const user = localStorage.getItem('user')
+      setIsLoggedIn(!!user)
+      if (user) {
+        setAccessToken(JSON.parse(user).token)
+      } else {
+        navigate('/')
+        setLoading(false)
+      }
+    }
+    checkUserStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkUserStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
+  useEffect(() => {
+    const handleGetLogs = async () => {
+      if (!isLoggedIn || !accessToken) return
+      try {
+        setLoading(true)
+        setError(null)
+        const response = await axios.get('v1/drugs/', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        if (response.status === 200) {
+          setLogs(response.data.documents || [])
+        }
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem('user')
+          alert('Session expired. Please log in again.')
+          navigate('/login')
+        }
+        setError(err.response?.data?.message || 'An error occurred.')
+      } finally {
+        setLoading(false)
+      }
+    }
+    handleGetLogs()
+  }, [isLoggedIn, accessToken, navigate])
   return (
-    <div style={logsContainerStyle}>
-      <h2 style={headingStyle}>Medication Logs</h2>
-      {logs.length > 0 ? (
+    <div className="bg-gray-900 min-h-screen flex flex-col items-center justify-center text-gray-200 p-6 font-poppins">
+      <h2 className="text-2xl font-bold mb-6">Latest Checks</h2>
+      {loading ? (
+        <p className="text-gray-400">Loading...</p>
+      ) : error ? (
+        <p className="text-gray-400">{error}</p>
+      ) : logs.length > 0 ? (
         logs.map((log) => (
           <div
-            key={log.id}
-            style={logItemStyle}
-            onClick={() => handleLogClick(log.medications)}
+            key={log._id}
+            className="bg-gray-800 text-gray-200 rounded-md p-6 mb-4 shadow-md cursor-pointer transition-transform hover:scale-105 w-128"
+            onClick={() =>
+              navigate('/interaction-results', {
+                state: { interactions: log.interactions },
+              })
+            }
           >
-            <p style={logDateStyle}>
-              <strong>Date:</strong> {log.date}
+            <p className="mb-2">
+              <strong>Date:</strong> {new Date(log.createdAt).toLocaleString()}
             </p>
-            <p style={logMedicationsStyle}>
-              <strong>Medications:</strong> {log.medications.join(", ")}
+            <p>
+              <strong>Medications:</strong> {log.drugs.join(', ')}
             </p>
           </div>
         ))
       ) : (
-        <p style={noLogsStyle}>No logs available</p>
-      )}
-      {logs.length > 0 && (
-        <button onClick={handleClearLogs} style={clearButtonStyle}>
-          Clear Logs
-        </button>
+        <p className="text-gray-400">No logs available.</p>
       )}
     </div>
-  );
-};
+  )
+}
 
-// Styles
-const logsContainerStyle = {
-  backgroundColor: "#222831",
-  minHeight: "100vh",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  color: "#eeeeee",
-  fontFamily: "'Poppins', sans-serif",
-  padding: "20px",
-};
-
-const headingStyle = {
-  fontSize: "1.8rem",
-  marginBottom: "20px",
-};
-
-const logItemStyle = {
-  backgroundColor: "#393e46",
-  color: "#eeeeee",
-  borderRadius: "8px",
-  padding: "20px",
-  marginBottom: "10px",
-  width: "80%",
-  maxWidth: "500px",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-  cursor: "pointer",
-  transition: "transform 0.2s ease",
-};
-
-const logDateStyle = {
-  marginBottom: "10px",
-};
-
-const logMedicationsStyle = {
-  marginBottom: "0",
-};
-
-const noLogsStyle = {
-  color: "#cccccc",
-};
-
-const clearButtonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#f44336",
-  color: "#ffffff",
-  fontSize: "1rem",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  marginTop: "20px",
-  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-};
-
-export default Logs;
+export default Logs

@@ -1,123 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-const Home = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+function Home() {
+  const navigate = useNavigate()
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
+    const checkUserStatus = () => {
+      const user = localStorage.getItem('user')
+      if (user) navigate('/medication-input')
     }
-  }, []);
-
+    checkUserStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkUserStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
   return (
-    <div style={pageStyle}>
-      <div style={contentContainerStyle}>
-        <h1 style={headingStyle}>Welcome to the Drug Interaction Checker ✨</h1>
-        <p style={subHeadingStyle}>
+    <div className="bg-gray-900 flex justify-center items-center font-poppins">
+      <div className="text-center text-gray-200 bg-gray-800 rounded-lg shadow-lg w-144 p-10 mt-28">
+        <h1 className="text-2xl font-bold mb-8">
+          Welcome to the Drug Interaction Checker
+        </h1>
+        <p className="text-gray-400 mb-8">
           Easily check for potential interactions between your medications.
         </p>
-        {isLoggedIn ? (
-          <Link to="/input-medication" style={buttonStyle}>
-            Start Checking Medications
+        <h2 className="text-lg mb-8">
+          Please log in to access the Drug Interaction Checker
+        </h2>
+        <div className="flex justify-center gap-4">
+          <Link
+            to="/register"
+            className="px-6 py-3 bg-cyan-500 text-white text-lg font-bold rounded-md shadow-md hover:bg-gray-600 hover:scale-105 transition-all duration-300"
+          >
+            Register
           </Link>
-        ) : (
-          <div>
-            <h2 style={promptStyle}>
-              Please log in to access the Drug Interaction Checker
-            </h2>
-            <div style={authButtonsContainerStyle}>
-              <Link to="/register" style={authButtonStyle}>
-                Register
-              </Link>
-              <Link to="/login" style={authButtonStyle}>
-                Login
-              </Link>
-            </div>
-          </div>
-        )}
+          <Link
+            to="/login"
+            className="px-6 py-3 bg-cyan-500 text-white text-lg font-bold rounded-md shadow-md hover:bg-gray-600 hover:scale-105 transition-all duration-300"
+          >
+            Login
+          </Link>
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-const pageStyle = {
-  backgroundColor: "#222831",
-  minHeight: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  fontFamily: "'Poppins', sans-serif",
-  margin: 0,
-};
-
-const contentContainerStyle = {
-  textAlign: "center",
-  color: "#eeeeee",
-  padding: "30px",
-  backgroundColor: "#393e46",
-  borderRadius: "10px",
-  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-  width: "400px",
-  maxWidth: "400px",
-};
-
-const headingStyle = {
-  fontSize: "1.8rem",
-  fontWeight: "bold",
-  marginBottom: "15px",
-};
-
-const subHeadingStyle = {
-  fontSize: "1rem",
-  marginBottom: "20px",
-  color: "#cccccc",
-};
-
-const promptStyle = {
-  fontSize: "1rem",
-  marginBottom: "20px",
-  color: "#eeeeee",
-};
-
-const buttonStyle = {
-  display: "inline-block",
-  padding: "10px 20px",
-  backgroundColor: "#00adb5",
-  color: "#ffffff",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  textDecoration: "none",
-  borderRadius: "5px",
-  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-  transition: "background-color 0.3s ease, transform 0.3s ease",
-  marginTop: "20px",
-  cursor: "pointer",
-  width: "150px",
-  textAlign: "center",
-};
-
-const authButtonsContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "10px",
-};
-
-const authButtonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#5c646f",
-  color: "#ffffff",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  textDecoration: "none",
-  borderRadius: "5px",
-  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-  transition: "background-color 0.3s ease, transform 0.3s ease",
-  cursor: "pointer",
-  width: "150px",
-  textAlign: "center",
-};
-export default Home;
+export default Home

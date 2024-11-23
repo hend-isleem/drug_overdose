@@ -1,0 +1,60 @@
+{
+  "root": true, // Make sure eslint picks up the config at the root of the directory
+  "parserOptions": {
+    "ecmaVersion": 12, // Use the latest ecmascript standard
+    "sourceType": "module", // Allows using import/export statements
+    "ecmaFeatures": {
+      "jsx": true // Enable JSX since we're using React
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect" // Automatically detect the react version
+    }
+  },
+  "env": {
+    "browser": true, // Enables browser globals like window and document
+    "amd": true, // Enables require() and define() as global variables as per the amd spec.
+    "node": true, // Enables Node.js global variables and Node.js scoping.
+    "es2021": true,
+    "jest": true
+  },
+  "extends": [
+    "airbnb",
+    "plugin:security/recommended",
+    "plugin:prettier/recommended",
+    "plugin:jest/recommended"
+  ],
+  "plugins": ["security", "prettier", "simple-import-sort"],
+  "rules": {
+    "react/prop-types": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/no-named-as-default-member": "off",
+    "consistent-return": "off",
+    "no-param-reassign": "off",
+    "react/destructuring-assignment": "off",
+    "no-nested-ternary": "off",
+    "no-plusplus": "off",
+    "security/detect-object-injection": "off",
+    "no-underscore-dangle": "off",
+    "react/no-array-index-key": "off",
+    "no-restricted-globals": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "import/prefer-default-export": "off",
+    "react/button-has-type": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "func-names": "off",
+    "no-console": "warn",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "no-use-before-define": [
+      "error",
+      { "functions": true, "classes": true, "variables": false }
+    ], // disable the rule for variables, but enable it for functions and classes
+    "prettier/prettier": ["error", {}, { "usePrettierrc": true }] // Use our .prettierrc file as source
+  }
+}

@@ -1,84 +1,148 @@
-import React from "react";
-import { act, render, screen, fireEvent } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import LoginForm from "./Login";
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import axios from 'axios'
+import React from 'react'
+import { MemoryRouter, useNavigate } from 'react-router-dom'
 
-describe("LoginForm", () => {
-  test("renders Login form fields", () => {
-    act(() => {
-      render(
-        <MemoryRouter>
-          <LoginForm />
-        </MemoryRouter>
-      );
-    });
+import LoginForm from './Login'
 
-    const usernameInput = screen.getByLabelText(/Username:/i);
-    const passwordInput = screen.getByLabelText(/Password:/i);
-    const loginButton = screen.getByRole("button", { name: /Login/i });
+// Mock dependencies
+jest.mock('axios')
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}))
 
-    expect(usernameInput).toBeInTheDocument();
-    expect(passwordInput).toBeInTheDocument();
-    expect(loginButton).toBeInTheDocument();
-  });
+describe('LoginForm Component', () => {
+  const mockNavigate = jest.fn()
+  beforeEach(() => {
+    useNavigate.mockReturnValue(mockNavigate)
+    jest.clearAllMocks()
+    localStorage.clear()
+  })
 
-  test("handles form submission with valid credentials", () => {
-    // Set up localStorage with test user data
-    localStorage.setItem(
-      "user",
-      JSON.stringify({ username: "testuser", password: "password123" })
-    );
+  it('renders the login form with email and password fields', () => {
+    render(
+      <MemoryRouter>
+        <LoginForm />
+      </MemoryRouter>
+    )
 
-    const alertMock = jest.spyOn(window, "alert").mockImplementation();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument()
+  })
+
+  it('shows an error message when the API call fails', async () => {
+    axios.post.mockRejectedValueOnce({
+      response: { data: { message: 'Invalid credentials' } },
+    })
 
     render(
       <MemoryRouter>
         <LoginForm />
       </MemoryRouter>
-    );
+    )
 
-    const usernameInput = screen.getByLabelText(/Username:/i);
-    const passwordInput = screen.getByLabelText(/Password:/i);
-    const loginButton = screen.getByRole("button", { name: /Login/i });
+    // Fill in the form
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'test@example.com' },
+    })
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: 'wrongpassword' },
+    })
 
-    fireEvent.change(usernameInput, { target: { value: "testuser" } });
-    fireEvent.change(passwordInput, { target: { value: "password123" } });
-    fireEvent.click(loginButton);
+    // Submit the form
+    fireEvent.click(screen.getByRole('button', { name: /login/i }))
 
-    expect(alertMock).toHaveBeenCalledWith("Login successful!");
+    // Wait for the error message
+    await waitFor(() => {
+      expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument()
+    })
 
-    alertMock.mockRestore();
-  });
+    expect(axios.post).toHaveBeenCalledWith('v1/auth/login', {
+      email: 'test@example.com',
+      password: 'wrongpassword',
+    })
+  })
 
-  // New test for login attempt with missing password
-  test("fails to login when password is missing and correctly detects failure", () => {
-    // Set up localStorage with test user data
-    localStorage.setItem(
-      "user",
-      JSON.stringify({ username: "testuser", password: "password123" })
-    );
-
-    const alertMock = jest.spyOn(window, "alert").mockImplementation();
+  it('navigates to /medication-input on successful login', async () => {
+    const mockResponse = {
+      data: {
+        tokens: {
+          access: { token: 'fake-jwt-token' },
+        },
+        user: { name: 'John Doe' },
+      },
+    }
+    axios.post.mockResolvedValueOnce(mockResponse)
 
     render(
       <MemoryRouter>
         <LoginForm />
       </MemoryRouter>
-    );
+    )
 
-    const usernameInput = screen.getByLabelText(/Username:/i);
-    const loginButton = screen.getByRole("button", { name: /Login/i });
+    // Fill in the form
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'test@example.com' },
+    })
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: 'correctpassword' },
+    })
 
-    // Enter only username, leaving password empty
-    fireEvent.change(usernameInput, { target: { value: "testuser" } });
-    fireEvent.click(loginButton);
+    // Submit the form
+    fireEvent.click(screen.getByRole('button', { name: /login/i }))
 
-    // Expect no "Login successful!" alert to appear, indicating login failure
-    expect(alertMock).not.toHaveBeenCalledWith("Login successful!");
+    // Wait for the success popup
+    await waitFor(() => {
+      expect(screen.getByText(/login successful/i)).toBeInTheDocument()
+    })
 
-    // Check for the specific alert message for invalid credentials
-    expect(alertMock).toHaveBeenCalledWith("Invalid credentials.");
+    // Wait for navigation to complete after 2 seconds
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000)
+    })
 
-    alertMock.mockRestore();
-  });
-});
+    // Assert navigation to /medication-input
+    expect(mockNavigate).toHaveBeenCalledWith('/medication-input')
+
+    // Verify localStorage update
+    const storedUser = JSON.parse(localStorage.getItem('user'))
+    expect(storedUser).toEqual({
+      email: 'test@example.com',
+      token: 'fake-jwt-token',
+      name: 'John Doe',
+    })
+  })
+
+  it('navigates to /register when the register button is clicked', () => {
+    render(
+      <MemoryRouter>
+        <LoginForm />
+      </MemoryRouter>
+    )
+
+    fireEvent.click(screen.getByText(/please register/i))
+
+    expect(mockNavigate).toHaveBeenCalledWith('/register')
+  })
+
+  it('redirects to /medication-input if the user is already logged in', () => {
+    // Mock localStorage to simulate a logged-in user
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ email: 'test@example.com', token: 'fake-jwt-token' })
+    )
+
+    render(
+      <MemoryRouter>
+        <LoginForm />
+      </MemoryRouter>
+    )
+
+    expect(mockNavigate).toHaveBeenCalledWith('/medication-input')
+
+    // Clean up localStorage
+    localStorage.clear()
+  })
+})

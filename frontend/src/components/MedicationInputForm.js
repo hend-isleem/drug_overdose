@@ -1,116 +1,121 @@
-import React, { useEffect, useState }  from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
+import LoadingOverlay from './LoadingOverlay'
 
-
-
-
-const MedicationInputForm = () => {
-  const [drugList, setDrugList] = useState([]);
-  const [currentDrug, setCurrentDrug] = useState("");  
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const navigate = useNavigate(); // Initialize navigate function
-
+function MedicationInputForm() {
+  const [drugList, setDrugList] = useState([])
+  const [currentDrug, setCurrentDrug] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [accessToken, setAccessToken] = useState('')
+  const navigate = useNavigate()
   useEffect(() => {
-    // User logged in?
-    const user = localStorage.getItem('user');
-    if (user) {
-    setIsLoggedIn(true);
-    } else {
-    setIsLoggedIn(false);
+    const checkUserStatus = () => {
+      const user = localStorage.getItem('user')
+      if (user) {
+        setAccessToken(JSON.parse(user).token)
+        setIsLoggedIn(true)
+      } else {
+        navigate('/')
+        setIsLoggedIn(false)
+      }
     }
-  }, []);
-
+    checkUserStatus()
+    const handleStorageChange = (event) => {
+      if (event.key === 'user') {
+        checkUserStatus()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
   const handleChange = (e) => {
-    setCurrentDrug(e.target.value);
-  };
-
+    setCurrentDrug(e.target.value)
+  }
   const handleAddDrug = () => {
     if (currentDrug) {
-      setDrugList([...drugList, currentDrug]);
-      setCurrentDrug("");
+      setDrugList([...drugList, currentDrug])
+      setCurrentDrug('')
     }
-  };
-
+  }
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleAddDrug()
+    }
+  }
   const handleRemoveDrug = (index) => {
-    setDrugList(drugList.filter((_, i) => i !== index));
-  };
-
+    setDrugList(drugList.filter((_, i) => i !== index))
+  }
   const handleCheckInteractions = async () => {
-    if (!isLoggedIn) {
-      alert("Please log in to check interactions.");
-      return; // Nope, no API call for you if you are not logged in :)
-    }
-
-    if (drugList.length === 0) return;
-    // drugs API request
+    if (!isLoggedIn || drugList.length === 0) return
     try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await axios.post("http://localhost:3001/v1/drugs/", { "drugs": drugList });
-
+      setLoading(true)
+      setError(null)
+      const response = await axios.post(
+        'v1/drugs/',
+        { drugs: drugList },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      )
       if (response.status === 200) {
-        const data = response.data;
-
-        // Save to logs as history
-        const existingLogs = JSON.parse(localStorage.getItem("logs")) || [];
-        const newLog = {
-          id: Date.now(),
-          medications: drugList,
-          date: new Date().toLocaleString(),
-        };
-        existingLogs.push(newLog);
-        localStorage.setItem("logs", JSON.stringify(existingLogs));
-
-        navigate("/interaction-results", { state: { interactions: data.interactions } }); 
-      } else {
-        setError(response.message || "An error occurred. Please try again.");
+        const { data } = response
+        navigate('/interaction-results', {
+          state: { interactions: data.interactions },
+        })
       }
     } catch (err) {
-      console.error("Failed to fetch drug interactions:", error);
-      setError(err.message || "An error occurred. Please try again.");
+      if (err.response?.status === 401) {
+        localStorage.removeItem('user')
+        alert('Session expired. Please log in again.')
+        navigate('/login')
+      }
+      setError(err.response?.data?.message || 'An error occurred.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
-
+  }
   const handleReset = () => {
-    setDrugList([]);
-  };
-
+    setDrugList([])
+  }
   return (
-    <div style={containerStyle}>
-      <h2 style={headingStyle}>Drug Interaction Checker</h2>
-      <p style={descriptionStyle}>
-        Check interactions with multiple drugs, vaccines, supplements, alcohol,
-        food, and diseases.
+    <div className="bg-gray-800 rounded-lg shadow-md text-gray-200 text-center w-144 p-10 mt-24 mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Drug Interaction Checker</h2>
+      <p className="text-gray-400 mb-6">
+        Check interactions with multiple drugs.
       </p>
-      <div style={inputContainerStyle}>
+      <div className="flex items-center mb-6">
         <input
           type="text"
           placeholder="Enter a drug name"
           value={currentDrug}
           onChange={handleChange}
-          style={inputStyle}
+          onKeyDown={handleKeyDown}
+          className="flex-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
         />
-        <button onClick={handleAddDrug} style={addButtonStyle}>
+        <button
+          onClick={handleAddDrug}
+          className="ml-2 px-4 py-2 bg-cyan-500 text-white rounded-md hover:bg-cyan-400 transition"
+        >
           Add
         </button>
       </div>
       {drugList.length > 0 && (
-        <div style={listContainerStyle}>
-          <h3>Unsaved interactions list</h3>
-          <ul style={ulStyle}>
+        <div className="mb-6">
+          <h3 className="text-lg font-bold mb-4">Unsaved interactions list</h3>
+          <ul className="list-none p-0">
             {drugList.map((drug, index) => (
-              <li key={index} style={liStyle}>
+              <li
+                key={index}
+                className="flex justify-between items-center p-2 border-b border-gray-600"
+              >
                 {drug}
                 <button
                   onClick={() => handleRemoveDrug(index)}
-                  style={removeButtonStyle}
+                  className="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-400 transition"
                 >
                   ✖
                 </button>
@@ -119,173 +124,29 @@ const MedicationInputForm = () => {
           </ul>
         </div>
       )}
-      <div style={buttonContainerStyle}>
+      <div className="flex justify-between gap-4">
         <button
           onClick={handleCheckInteractions}
-          style={
-            drugList.length < 2 ? disabledCheckButtonStyle : checkButtonStyle
-          }
           disabled={drugList.length < 2}
+          className={`px-4 py-2 rounded-md ${
+            drugList.length < 2
+              ? 'bg-gray-500 cursor-not-allowed'
+              : 'bg-cyan-500 hover:bg-cyan-400'
+          } text-white transition`}
         >
           Check Interactions
         </button>
-
-        <button onClick={handleReset} style={resetButtonStyle}>
-          Start over
+        <button
+          onClick={handleReset}
+          className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition"
+        >
+          Start Over
         </button>
       </div>
-      {loading && <LoadingOverlay />} 
+      {loading && <LoadingOverlay />}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
-  );
-};
+  )
+}
 
-const LoadingOverlay = () => (
-  <div style={overlayStyle}>
-    <div style={spinnerStyle}></div>
-    <p style={loadingTextStyle}>Loading...</p>
-  </div>
-);
-
-// Styling
-const containerStyle = {
-  width: "100%",
-  maxWidth: "400px", // Matches signup form
-  margin: "50px auto", // Centers like the signup form
-  padding: "30px",
-  backgroundColor: "#393e46", // Matches signup form background
-  borderRadius: "10px",
-  color: "#eeeeee", // Light text for readability
-  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Similar shadow effect
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-};
-
-const headingStyle = {
-  fontSize: "24px",
-  marginBottom: "10px",
-  color: "#eeeeee", // Matches text color with other forms
-};
-
-const descriptionStyle = {
-  fontSize: "16px",
-  marginBottom: "20px",
-  color: "#cccccc", // Slightly lighter text for description
-};
-
-const inputContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  marginBottom: "20px",
-  width: "100%",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px",
-  border: "1px solid #eeeeee", // Matches input borders to the form's aesthetic
-  borderRadius: "5px",
-  backgroundColor: "#222831", // Dark background for inputs
-  color: "#ffffff", // Light text for readability
-  boxSizing: "border-box", // Ensures consistent alignment
-};
-
-const addButtonStyle = {
-  padding: "10px 15px",
-  marginLeft: "10px",
-  backgroundColor: "#00adb5", // Accent color matching other forms
-  color: "#ffffff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-  fontSize: "16px",
-};
-
-const listContainerStyle = {
-  marginBottom: "20px",
-  width: "100%", // Ensures consistent width alignment
-};
-
-const ulStyle = {
-  listStyleType: "none",
-  paddingLeft: "0",
-};
-
-const liStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "10px 0",
-  borderBottom: "1px solid #444", // Darker border for consistency
-};
-
-const removeButtonStyle = {
-  backgroundColor: "#f44336",
-  color: "#fff",
-  border: "none",
-  padding: "5px 10px",
-  borderRadius: "4px",
-  cursor: "pointer",
-};
-
-const buttonContainerStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  width: "100%", // Matches width with container
-  gap: "10px",
-};
-
-const checkButtonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#00adb5", // Accent color
-  color: "#ffffff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-};
-
-const resetButtonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#5c646f", // Neutral button color
-  color: "#ffffff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-};
-
-const disabledCheckButtonStyle = {
-  ...checkButtonStyle,
-  backgroundColor: "#cccccc", // Disabled background color
-  cursor: "not-allowed",
-};
-const overlayStyle = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 1000,
-};
-
-const spinnerStyle = {
-  width: "50px",
-  height: "50px",
-  border: "5px solid #f3f3f3",
-  borderTop: "5px solid #007BFF",
-  borderRadius: "50%",
-  animation: "spin 1s linear infinite",
-};
-
-const loadingTextStyle = {
-  color: "#fff",
-  marginTop: "10px",
-  fontSize: "18px",
-};
-
-export default MedicationInputForm;
+export default MedicationInputForm

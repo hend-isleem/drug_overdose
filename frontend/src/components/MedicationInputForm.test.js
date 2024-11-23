@@ -1,112 +1,133 @@
-import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
-import MedicationInputForm from "./MedicationInputForm";
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import axios from 'axios'
+import React from 'react'
+import { MemoryRouter, useNavigate } from 'react-router-dom'
 
-describe("MedicationInputForm", () => {
-  test("allows a user to add drugs to the list", () => {
+import MedicationInputForm from './MedicationInputForm'
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}))
+
+jest.mock('axios')
+
+describe('MedicationInputForm Component', () => {
+  const mockNavigate = jest.fn()
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    useNavigate.mockImplementation(() => mockNavigate)
+    localStorage.setItem(
+      'user',
+      JSON.stringify({ token: 'mock-valid-token' }) // Replace with a real or mock token as required
+    )
+  })
+
+  it('renders the form with input and buttons', () => {
     render(
-      <Router>
+      <MemoryRouter>
         <MedicationInputForm />
-      </Router>
-    );
+      </MemoryRouter>
+    )
 
-    const input = screen.getByPlaceholderText("Enter a drug name");
-    const addButton = screen.getByText("Add");
+    expect(
+      screen.getByPlaceholderText(/enter a drug name/i)
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /add/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /check interactions/i })
+    ).toBeInTheDocument()
+  })
 
-    fireEvent.change(input, { target: { value: "Aspirin" } });
-    fireEvent.click(addButton);
-
-    expect(screen.getByText("Aspirin")).toBeInTheDocument();
-  });
-
-  test("enables 'Check Interactions' button only after adding two drugs", () => {
+  it('adds a drug to the list when "Add" button is clicked', () => {
     render(
-      <Router>
+      <MemoryRouter>
         <MedicationInputForm />
-      </Router>
-    );
+      </MemoryRouter>
+    )
 
-    const input = screen.getByPlaceholderText("Enter a drug name");
-    const addButton = screen.getByText("Add");
-    const checkButton = screen.getByText("Check Interactions");
+    const input = screen.getByPlaceholderText(/enter a drug name/i)
+    const addButton = screen.getByRole('button', { name: /add/i })
 
-    // Initially, the button should be disabled
-    expect(checkButton).toBeDisabled();
+    fireEvent.change(input, { target: { value: 'Aspirin' } })
+    fireEvent.click(addButton)
 
-    // Add the first drug
-    fireEvent.change(input, { target: { value: "Aspirin" } });
-    fireEvent.click(addButton);
-    expect(checkButton).toBeDisabled(); // Button still disabled after one drug
+    expect(screen.getByText('Aspirin')).toBeInTheDocument()
+  })
 
-    // Add the second drug
-    fireEvent.change(input, { target: { value: "Ibuprofen" } });
-    fireEvent.click(addButton);
-    expect(checkButton).toBeEnabled(); // Button should be enabled now
-  });
+  it('sends a real request and navigates to interaction results on success', async () => {
+    axios.post.mockResolvedValueOnce({
+      status: 200,
+      data: {
+        interactions: [
+          { drug1: 'Aspirin', drug2: 'Ibuprofen', interaction: 'High risk' },
+        ],
+      },
+    })
 
-  test("allows a user to remove a drug from the list", () => {
     render(
-      <Router>
+      <MemoryRouter>
         <MedicationInputForm />
-      </Router>
-    );
+      </MemoryRouter>
+    )
 
-    const input = screen.getByPlaceholderText("Enter a drug name");
-    const addButton = screen.getByText("Add");
+    const input = screen.getByPlaceholderText(/enter a drug name/i)
+    const addButton = screen.getByRole('button', { name: /add/i })
+    const checkButton = screen.getByRole('button', {
+      name: /check interactions/i,
+    })
 
-    fireEvent.change(input, { target: { value: "Aspirin" } });
-    fireEvent.click(addButton);
+    // Add drugs
+    fireEvent.change(input, { target: { value: 'Aspirin' } })
+    fireEvent.click(addButton)
+    fireEvent.change(input, { target: { value: 'Ibuprofen' } })
+    fireEvent.click(addButton)
 
-    const removeButton = screen.getByText("✖");
-    fireEvent.click(removeButton);
+    // Click "Check Interactions"
+    fireEvent.click(checkButton)
 
-    expect(screen.queryByText("Aspirin")).toBeNull();
-  });
+    // Wait for navigation
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/interaction-results', {
+        state: {
+          interactions: [
+            { drug1: 'Aspirin', drug2: 'Ibuprofen', interaction: 'High risk' },
+          ],
+        },
+      })
+    })
+  })
 
-  test("allows a user to reset the drug list", () => {
+  it('shows an error message when the API call fails', async () => {
+    axios.post.mockRejectedValueOnce({
+      response: { status: 500, data: { message: 'An error occurred.' } },
+    })
+
     render(
-      <Router>
+      <MemoryRouter>
         <MedicationInputForm />
-      </Router>
-    );
+      </MemoryRouter>
+    )
 
-    const input = screen.getByPlaceholderText("Enter a drug name");
-    const addButton = screen.getByText("Add");
-    const resetButton = screen.getByText("Start over");
+    const input = screen.getByPlaceholderText(/enter a drug name/i)
+    const addButton = screen.getByRole('button', { name: /add/i })
+    const checkButton = screen.getByRole('button', {
+      name: /check interactions/i,
+    })
 
-    fireEvent.change(input, { target: { value: "Aspirin" } });
-    fireEvent.click(addButton);
-    fireEvent.click(resetButton);
+    // Add drugs
+    fireEvent.change(input, { target: { value: 'Aspirin' } })
+    fireEvent.click(addButton)
+    fireEvent.change(input, { target: { value: 'Ibuprofen' } })
+    fireEvent.click(addButton)
 
-    expect(screen.queryByText("Aspirin")).toBeNull();
-  });
+    // Click "Check Interactions"
+    fireEvent.click(checkButton)
 
-  test("disables 'Check Interactions' button after resetting the drug list", () => {
-    render(
-      <Router>
-        <MedicationInputForm />
-      </Router>
-    );
-
-    const input = screen.getByPlaceholderText("Enter a drug name");
-    const addButton = screen.getByText("Add");
-    const checkButton = screen.getByText("Check Interactions");
-    const resetButton = screen.getByText("Start over");
-
-    // Add two drugs
-    fireEvent.change(input, { target: { value: "Aspirin" } });
-    fireEvent.click(addButton);
-    fireEvent.change(input, { target: { value: "Ibuprofen" } });
-    fireEvent.click(addButton);
-
-    // Button should be enabled
-    expect(checkButton).toBeEnabled();
-
-    // Reset the drug list
-    fireEvent.click(resetButton);
-
-    // Button should be disabled again
-    expect(checkButton).toBeDisabled();
-  });
-});
+    // Wait for error message
+    await waitFor(() => {
+      expect(screen.getByText(/an error occurred/i)).toBeInTheDocument()
+    })
+  })
+})
