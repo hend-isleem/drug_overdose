@@ -43,7 +43,7 @@ jobs:
           node-version: 20.17.0
 
       - name: Install Dependencies
-        run: cd backend && npm i
+        run: cd backend && yarn
       - name: Run tests
         run: cd backend && npm test || exit 0
       
