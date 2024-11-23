@@ -46,6 +46,13 @@ function Logs() {
       } catch (err) {
         if (err.response && err.response.status === 401) {
           localStorage.removeItem('user')
+          window.dispatchEvent(
+            new StorageEvent('storage', {
+              key: 'user',
+              oldValue: null,
+              newValue: null,
+            })
+          )
           alert('Session expired. Please log in again.')
           navigate('/login')
         }
