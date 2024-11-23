@@ -1,10 +1,10 @@
-name: Run front_test
+name: Run frontend.workflow
 
 on:
   pull_request:
-    branches: ["main", "sali"]
+    branches: ["main"]
   push:
-    branches: ["main", "sali"]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:

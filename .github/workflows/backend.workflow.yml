@@ -1,10 +1,10 @@
-name: Run tests
+name: Run backend.workflow
 
 on:
   pull_request:
-    branches: ['main', 'back-end', 'adding_tests_backend']
+    branches: ['main']
   push:
-    branches: ['main', 'adding_tests_backend']
+    branches: ['main']
 
   workflow_dispatch:
 
