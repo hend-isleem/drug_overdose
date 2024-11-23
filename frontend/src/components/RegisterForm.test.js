@@ -1,11 +1,9 @@
-import '@testing-library/jest-dom'
-
-import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import axios from 'axios'
+import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
+
 import RegisterForm from './RegisterForm'
-import '@testing-library/jest-dom' // Import for jest-dom matchers
 
 jest.mock('axios') // Mock axios for API testing
 

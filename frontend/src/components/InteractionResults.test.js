@@ -1,15 +1,21 @@
-import React from 'react'
-import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
+import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
+
 import InteractionReport from './InteractionResults'
 
 // Mock the InteractionClassification component
-jest.mock('./InteractionClassification', () => () => (
-  <div data-testid="interaction-classification">
-    Mocked InteractionClassification
-  </div>
-))
+jest.mock(
+  './InteractionClassification',
+  () =>
+    function () {
+      return (
+        <div data-testid="interaction-classification">
+          Mocked InteractionClassification
+        </div>
+      )
+    }
+)
 
 describe('InteractionReport Component', () => {
   it('renders the title of the report', () => {

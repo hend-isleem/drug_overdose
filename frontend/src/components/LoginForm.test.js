@@ -1,8 +1,8 @@
-import React from 'react'
-import '@testing-library/jest-dom'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { MemoryRouter, useNavigate } from 'react-router-dom'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import axios from 'axios'
+import React from 'react'
+import { MemoryRouter, useNavigate } from 'react-router-dom'
+
 import LoginForm from './Login'
 
 // Mock dependencies
@@ -99,7 +99,9 @@ describe('LoginForm Component', () => {
     })
 
     // Wait for navigation to complete after 2 seconds
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000)
+    })
 
     // Assert navigation to /medication-input
     expect(mockNavigate).toHaveBeenCalledWith('/medication-input')

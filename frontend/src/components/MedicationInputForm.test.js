@@ -1,10 +1,9 @@
-import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import '@testing-library/jest-dom'
-import MedicationInputForm from './MedicationInputForm'
-import { useNavigate } from 'react-router-dom'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import axios from 'axios'
+import React from 'react'
+import { MemoryRouter, useNavigate } from 'react-router-dom'
+
+import MedicationInputForm from './MedicationInputForm'
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
