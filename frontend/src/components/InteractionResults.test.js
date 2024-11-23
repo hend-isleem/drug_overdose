@@ -1,59 +1,85 @@
-import { fireEvent, render, screen } from '@testing-library/react'
 import React from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
+import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import InteractionReport from './InteractionResults'
 
-import MedicationInputForm from './MedicationInputForm'
+// Mock the InteractionClassification component
+jest.mock('./InteractionClassification', () => () => (
+  <div data-testid="interaction-classification">
+    Mocked InteractionClassification
+  </div>
+))
 
-describe('MedicationInputForm', () => {
-  test('enables the Check Interactions button when a drug is added', () => {
+describe('InteractionReport Component', () => {
+  it('renders the title of the report', () => {
     render(
-      <Router>
-        <MedicationInputForm />
-      </Router>
+      <MemoryRouter initialEntries={[{ state: { interactions: [] } }]}>
+        <InteractionReport />
+      </MemoryRouter>
     )
-    const input = screen.getByPlaceholderText('Enter a drug name')
-    const addButton = screen.getByText('Add')
-    const checkInteractionsButton = screen.getByText('Check Interactions')
-
-    fireEvent.change(input, { target: { value: 'Aspirin' } })
-    fireEvent.click(addButton)
-
-    // Check that the button is now enabled
-    expect(checkInteractionsButton).not.toBeDisabled()
+    expect(screen.getByText(/Drug Interaction Report/i)).toBeInTheDocument()
   })
 
-  test('disables the Check Interactions button when no drugs are added', () => {
+  it('displays a message when there are no interactions', () => {
     render(
-      <Router>
-        <MedicationInputForm />
-      </Router>
+      <MemoryRouter initialEntries={[{ state: { interactions: [] } }]}>
+        <InteractionReport />
+      </MemoryRouter>
     )
-    const checkInteractionsButton = screen.getByText('Check Interactions')
-
-    // Check that the button is disabled initially
-    expect(checkInteractionsButton).toBeDisabled()
+    expect(
+      screen.getByText(/No known interactions for the selected medications/i)
+    ).toBeInTheDocument()
   })
 
-  test('detects if button remains disabled after adding a drug, expecting it to be enabled', () => {
+  it('renders interactions when provided in the state', () => {
+    const mockInteractions = [
+      {
+        severity: 'Major',
+        drugs: 'DrugA  DrugB',
+        description: 'This is a major interaction description.',
+      },
+      {
+        severity: 'Moderate',
+        drugs: 'DrugC  DrugD',
+        description: 'This is a moderate interaction description.',
+      },
+      {
+        severity: 'Major',
+        drugs: 'DrugE  DrugF',
+        description: 'Another major interaction description.',
+      },
+    ]
+
     render(
-      <Router>
-        <MedicationInputForm />
-      </Router>
+      <MemoryRouter
+        initialEntries={[{ state: { interactions: mockInteractions } }]}
+      >
+        <InteractionReport />
+      </MemoryRouter>
     )
-    const input = screen.getByPlaceholderText('Enter a drug name')
-    const addButton = screen.getByText('Add')
-    const checkInteractionsButton = screen.getByText('Check Interactions')
 
-    fireEvent.change(input, { target: { value: 'Aspirin' } })
-    fireEvent.click(addButton)
+    // Use `getAllByText` with a specific selector to only match <h2> elements
+    const majorInteractions = screen.getAllByText(/Major Interaction/i, {
+      selector: 'h2',
+    })
+    const moderateInteractions = screen.getAllByText(/Moderate Interaction/i, {
+      selector: 'h2',
+    })
 
-    // Intentionally set expectation: button should be enabled
-    if (checkInteractionsButton.disabled) {
-      // Button is incorrectly still disabled
-      expect(checkInteractionsButton).toBeDisabled() // This passes because we detect the failure to enable
-    } else {
-      // Button correctly enabled
-      expect(checkInteractionsButton).not.toBeDisabled() // This confirms expected behavior
-    }
+    // Verify the counts
+    expect(majorInteractions).toHaveLength(2) // Two major interactions in mockInteractions
+    expect(moderateInteractions).toHaveLength(1) // One moderate interaction in mockInteractions
+
+    // Verify specific interaction details
+    expect(
+      screen.getByText(/This is a major interaction description/i)
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(/Another major interaction description/i)
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(/This is a moderate interaction description/i)
+    ).toBeInTheDocument()
   })
 })

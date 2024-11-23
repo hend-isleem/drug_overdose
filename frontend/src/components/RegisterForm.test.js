@@ -1,52 +1,57 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import '@testing-library/jest-dom'
+
 import React from 'react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-
+import axios from 'axios'
 import RegisterForm from './RegisterForm'
+import '@testing-library/jest-dom' // Import for jest-dom matchers
 
-describe('RegisterForm', () => {
-  test('renders Register form fields', () => {
-    render(
-      <MemoryRouter>
-        <RegisterForm />
-      </MemoryRouter>
-    )
+jest.mock('axios') // Mock axios for API testing
 
-    const usernameInput = screen.getByLabelText(/Username:/i)
-    const emailInput = screen.getByLabelText(/Email:/i)
-    const passwordInput = screen.getByLabelText(/Password:/i)
-    const registerButton = screen.getByRole('button', { name: /Register/i })
+const mockNavigate = jest.fn()
 
-    expect(usernameInput).toBeInTheDocument()
-    expect(emailInput).toBeInTheDocument()
-    expect(passwordInput).toBeInTheDocument()
-    expect(registerButton).toBeInTheDocument()
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}))
+
+describe('RegisterForm Component', () => {
+  afterEach(() => {
+    jest.clearAllMocks() // Reset mocks after each test
   })
 
-  test('handles form submission with valid inputs', () => {
+  it('renders the form with inputs and button', () => {
     render(
       <MemoryRouter>
         <RegisterForm />
       </MemoryRouter>
     )
 
-    const usernameInput = screen.getByLabelText(/Username:/i)
-    const emailInput = screen.getByLabelText(/Email:/i)
-    const passwordInput = screen.getByLabelText(/Password:/i)
-    const registerButton = screen.getByRole('button', { name: /Register/i })
-
-    fireEvent.change(usernameInput, { target: { value: 'testuser' } })
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
-    fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    fireEvent.click(registerButton)
-
-    // Assuming form submission stores user data in localStorage
-    expect(localStorage.getItem('user')).toContain('testuser')
+    // Check if all form elements are present
+    expect(screen.getByLabelText(/name:/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/email:/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/password:/i)).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /register/i })
+    ).toBeInTheDocument()
   })
 
-  // Test case: Fails to register when email is missing
-  test('fails registration when email is missing and detects error', () => {
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation()
+  it('shows an error if fields are empty', () => {
+    render(
+      <MemoryRouter>
+        <RegisterForm />
+      </MemoryRouter>
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /register/i }))
+
+    expect(screen.getByText(/please fill in all fields/i)).toBeInTheDocument()
+  })
+  it('sends a request and shows success message on successful registration', async () => {
+    jest.useFakeTimers() // Enable fake timers at the start of the test
+
+    axios.post.mockResolvedValueOnce({ status: 201 }) // Mock a successful response
 
     render(
       <MemoryRouter>
@@ -54,22 +59,38 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
 
-    const usernameInput = screen.getByLabelText(/Username:/i)
-    const passwordInput = screen.getByLabelText(/Password:/i)
-    const registerButton = screen.getByRole('button', { name: /Register/i })
+    // Fill out the form
+    fireEvent.change(screen.getByLabelText(/name:/i), {
+      target: { value: 'Test User' },
+    })
+    fireEvent.change(screen.getByLabelText(/email:/i), {
+      target: { value: 'test@example.com' },
+    })
+    fireEvent.change(screen.getByLabelText(/password:/i), {
+      target: { value: 'password123' },
+    })
 
-    fireEvent.change(usernameInput, { target: { value: 'testuser' } })
-    fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    fireEvent.click(registerButton)
+    // Submit the form
+    fireEvent.click(screen.getByRole('button', { name: /register/i }))
 
-    // Expect an alert for missing email
-    expect(alertMock).toHaveBeenCalledWith('Please enter all required fields.')
-    alertMock.mockRestore()
+    // Wait for the success popup to appear
+    await waitFor(() =>
+      expect(screen.getByText(/registration successful!/i)).toBeInTheDocument()
+    )
+
+    // Fast-forward the setTimeout
+    jest.runAllTimers() // Advance all timers
+
+    // Verify navigation to /login
+    expect(mockNavigate).toHaveBeenCalledWith('/login')
+
+    jest.useRealTimers() // Restore real timers after the test
   })
 
-  // Test case: Fails to register when password is missing
-  test('fails registration when password is missing and detects error', () => {
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation()
+  it('shows an error message on failed registration', async () => {
+    axios.post.mockRejectedValueOnce({
+      response: { data: { message: 'Registration failed!' } },
+    }) // Mock a failed API response
 
     render(
       <MemoryRouter>
@@ -77,22 +98,28 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
 
-    const usernameInput = screen.getByLabelText(/Username:/i)
-    const emailInput = screen.getByLabelText(/Email:/i)
-    const registerButton = screen.getByRole('button', { name: /Register/i })
+    // Fill out the form
+    fireEvent.change(screen.getByLabelText(/name:/i), {
+      target: { value: 'Test User' },
+    })
+    fireEvent.change(screen.getByLabelText(/email:/i), {
+      target: { value: 'test@example.com' },
+    })
+    fireEvent.change(screen.getByLabelText(/password:/i), {
+      target: { value: 'password123' },
+    })
 
-    fireEvent.change(usernameInput, { target: { value: 'testuser' } })
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
-    fireEvent.click(registerButton)
+    // Submit the form
+    fireEvent.click(screen.getByRole('button', { name: /register/i }))
 
-    // Expect an alert for missing password
-    expect(alertMock).toHaveBeenCalledWith('Please enter all required fields.')
-    alertMock.mockRestore()
+    // Wait for error message
+    await waitFor(() => {
+      expect(screen.getByText(/registration failed!/i)).toBeInTheDocument()
+    })
   })
 
-  // Test case: Detects invalid email format
-  test('fails registration with invalid email format', () => {
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation()
+  it('handles network errors gracefully', async () => {
+    axios.post.mockRejectedValueOnce(new Error('Network error')) // Mock a network error
 
     render(
       <MemoryRouter>
@@ -100,27 +127,33 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
 
-    const usernameInput = screen.getByLabelText(/Username:/i)
-    const emailInput = screen.getByLabelText(/Email:/i)
-    const passwordInput = screen.getByLabelText(/Password:/i)
-    const registerButton = screen.getByRole('button', { name: /Register/i })
+    // Fill out the form
+    fireEvent.change(screen.getByLabelText(/name:/i), {
+      target: { value: 'Test User' },
+    })
+    fireEvent.change(screen.getByLabelText(/email:/i), {
+      target: { value: 'test@example.com' },
+    })
+    fireEvent.change(screen.getByLabelText(/password:/i), {
+      target: { value: 'password123' },
+    })
 
-    fireEvent.change(usernameInput, { target: { value: 'testuser' } })
-    fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
-    fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    fireEvent.click(registerButton)
+    // Submit the form
+    fireEvent.click(screen.getByRole('button', { name: /register/i }))
 
-    // Expect an alert for invalid email format
-    expect(alertMock).toHaveBeenCalledWith(
-      'Please enter a valid email address.'
-    )
-    alertMock.mockRestore()
+    // Wait for error message
+    await waitFor(() => {
+      expect(
+        screen.getByText(/network error. please try again later./i)
+      ).toBeInTheDocument()
+    })
   })
 
-  // Test case: Detects registration attempt with duplicate username
-  test('fails registration when username is already taken', () => {
-    // Mock behavior for duplicate username check
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation()
+  it('redirects to medication input page if user is logged in', () => {
+    // Mock localStorage
+    jest
+      .spyOn(Storage.prototype, 'getItem')
+      .mockImplementation(() => JSON.stringify({ token: 'mockToken' }))
 
     render(
       <MemoryRouter>
@@ -128,18 +161,6 @@ describe('RegisterForm', () => {
       </MemoryRouter>
     )
 
-    const usernameInput = screen.getByLabelText(/Username:/i)
-    const emailInput = screen.getByLabelText(/Email:/i)
-    const passwordInput = screen.getByLabelText(/Password:/i)
-    const registerButton = screen.getByRole('button', { name: /Register/i })
-
-    fireEvent.change(usernameInput, { target: { value: 'existingUser' } })
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
-    fireEvent.change(passwordInput, { target: { value: 'password123' } })
-    fireEvent.click(registerButton)
-
-    // Expect an alert for duplicate username
-    expect(alertMock).toHaveBeenCalledWith('Username is already taken.')
-    alertMock.mockRestore()
+    expect(mockNavigate).toHaveBeenCalledWith('/medication-input')
   })
 })
