@@ -25,6 +25,13 @@ function LoginForm() {
           name: response.data.user?.name || 'User',
         }
         localStorage.setItem('user', JSON.stringify(user))
+        window.dispatchEvent(
+          new StorageEvent('storage', {
+            key: 'user',
+            oldValue: null,
+            newValue: user,
+          })
+        )
         setShowSuccessPopup(true)
         setTimeout(() => {
           setShowSuccessPopup(false)
