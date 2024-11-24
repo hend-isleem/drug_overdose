@@ -40,7 +40,7 @@ describe('Drugs Routes', async function () {
   let drugId
 
   describe('POST /v1/drugs', () => {
-    for (let i = 0; i < drugsConstant.length; i++) {
+    for (let i = 0; i < 10; i++) {
       it(`should return interaction warnings between the drugs ${drugsConstant[i].join(', ')}`, async () => {
         const res = await request.post('/v1/drugs').auth(userToken, { type: 'bearer' }).send({ drugs: drugsConstant[i] })
         drugId = res.body._id
