@@ -20,6 +20,7 @@
     "jest": true
   },
   "extends": [
+    "airbnb",
     "plugin:security/recommended",
     "plugin:prettier/recommended",
     "plugin:jest/recommended"
