@@ -1,10 +1,25 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate("/"); // Navigate to the home page
+    // Add logic to scroll to the welcoming container if you're on the home page
+    const welcomingContainer = document.getElementById("welcoming-container");
+    if (welcomingContainer) {
+      welcomingContainer.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <header style={headerStyle}>
       <div style={logoContainerStyle}>
-        <h1 style={logoTextStyle}>DDIs Checker</h1>
+        {/* Use onClick handler for the logo */}
+        <span style={logoTextStyle} onClick={handleLogoClick}>
+          DDIs Checker
+        </span>
       </div>
     </header>
   );
@@ -32,8 +47,11 @@ const logoTextStyle = {
   fontSize: "1.8rem",
   fontWeight: "bold",
   color: "#ffffff",
-  margin: 0,
+  textDecoration: "none", // Removes underline
+  cursor: "pointer", // Adds pointer cursor for better UX
 };
 
 export default Header;
+
+
 
