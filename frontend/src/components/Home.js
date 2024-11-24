@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaHeartbeat } from "react-icons/fa"; // For the heart icon
-import "../App.css"; // Ensure your CSS file includes the updated styles
+import "./App.css"; // Assuming global CSS for colors and styles
 
 function Home() {
   const navigate = useNavigate();
@@ -18,8 +18,8 @@ function Home() {
         checkUserStatus();
       }
     };
-
     window.addEventListener("storage", handleStorageChange);
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
@@ -29,12 +29,9 @@ function Home() {
     <div className="app">
       <div className="overlay"></div>
       <div className="container">
-        {/* Heart Icon */}
         <div className="heart-container">
           <FaHeartbeat className="large-heart-icon" />
         </div>
-
-        {/* Title and Descriptions */}
         <h1 className="title">Welcome to the Drug Interaction Checker</h1>
         <p className="subtitle">
           Easily check for potential interactions between your medications.
@@ -42,15 +39,19 @@ function Home() {
         <p className="additional-statement">
           Please log in to access the Drug Interaction Checker
         </p>
-
-        {/* Buttons */}
         <div className="button-group">
-          <Link to="/register" className="secondary-button">
+          <button
+            className="secondary-button"
+            onClick={() => navigate("/register")}
+          >
             Register
-          </Link>
-          <Link to="/login" className="secondary-button">
+          </button>
+          <button
+            className="secondary-button"
+            onClick={() => navigate("/login")}
+          >
             Login
-          </Link>
+          </button>
         </div>
       </div>
     </div>
@@ -58,4 +59,3 @@ function Home() {
 }
 
 export default Home;
-

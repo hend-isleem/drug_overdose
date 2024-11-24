@@ -1,15 +1,39 @@
-import React from 'react'
+import React from "react";
 
-function Header() {
+const Header = () => {
   return (
-    <header className="bg-gray-800 text-gray-200 p-5 flex justify-center items-center shadow-md font-poppins">
-      <div className="flex items-center">
-        <a href="/" className="text-2xl font-bold text-white">
-          DDIs Checker
-        </a>
+    <header style={headerStyle}>
+      <div style={logoContainerStyle}>
+        <h1 style={logoTextStyle}>DDIs Checker</h1>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+// Styles
+const headerStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: "10px 20px",
+  background: "linear-gradient(to right, #4e54c8, #8f94fb)", // Purple gradient background
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+  position: "sticky",
+  top: 0,
+  zIndex: 1000,
+};
+
+const logoContainerStyle = {
+  display: "flex",
+  alignItems: "center",
+};
+
+const logoTextStyle = {
+  fontSize: "1.8rem",
+  fontWeight: "bold",
+  color: "#ffffff",
+  margin: 0,
+};
+
+export default Header;
+
