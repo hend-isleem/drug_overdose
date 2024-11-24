@@ -4,7 +4,7 @@ const RegisterForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -13,15 +13,24 @@ const RegisterForm = () => {
     setError("");
     setShowSuccessPopup(false);
 
-    // Example functionality for registration
-    if (username && email && password) {
-      setShowSuccessPopup(true);
-      setTimeout(() => {
-        setShowSuccessPopup(false);
-      }, 2000);
-    } else {
+    // Example validation
+    if (!username || !email || !password) {
       setError("Please fill in all fields.");
+      return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    setShowSuccessPopup(true);
+    setTimeout(() => {
+      setShowSuccessPopup(false);
+    }, 2000);
   };
 
   const togglePasswordVisibility = () => {
@@ -43,6 +52,7 @@ const RegisterForm = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               style={inputStyle}
+              placeholder="Enter your username"
               required
             />
           </div>
@@ -56,6 +66,7 @@ const RegisterForm = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               style={inputStyle}
+              placeholder="Enter your email"
               required
             />
           </div>
@@ -70,11 +81,13 @@ const RegisterForm = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 style={passwordInputStyle}
+                placeholder="Enter your password"
                 required
               />
               <span
                 onClick={togglePasswordVisibility}
                 style={toggleVisibilityStyle}
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? "🙈" : "👁️"}
               </span>
@@ -100,12 +113,12 @@ const RegisterForm = () => {
 
 // Styles
 const pageStyle = {
-  minHeight: "100vh", // Ensures full-page height
+  minHeight: "100vh",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  backgroundColor: "#222831;", // Matches login page background
+  backgroundColor: "#222831",
   margin: 0,
 };
 
@@ -227,3 +240,4 @@ const popupMessageStyle = {
 };
 
 export default RegisterForm;
+
