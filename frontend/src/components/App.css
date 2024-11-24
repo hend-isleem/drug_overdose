@@ -128,4 +128,8 @@
     transform: scale(1.05); /* Zoom effect */
   }
   
-  
+  body {
+    background: linear-gradient(-45deg, #341e72, #2a5298); /* Blue gradient */
+    background-size: 400% 400%; /* Optional: Smooth animation */
+    animation: gradientBG 15s ease infinite; /* Optional: Add animation */
+  }

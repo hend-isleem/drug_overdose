@@ -4,6 +4,10 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      colors: {
+        'gray-900': '#341e72',
+        'brand-red': '#ff4136',
+      },
       fontFamily: {
         poppins: ["'Poppins'", 'sans-serif'],
       },
