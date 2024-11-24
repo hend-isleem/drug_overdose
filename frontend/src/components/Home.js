@@ -1,33 +1,34 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaHeartbeat } from "react-icons/fa"; // For the heart icon
-import "./App.css"; // Assuming global CSS for colors and styles
+import './App.css' // Assuming global CSS for colors and styles
+
+import React, { useEffect } from 'react'
+import { FaHeartbeat } from 'react-icons/fa' // For the heart icon
+import { useNavigate } from 'react-router-dom'
 
 function Home() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
     const checkUserStatus = () => {
-      const user = localStorage.getItem("user");
-      if (user) navigate("/medication-input");
-    };
-    checkUserStatus();
+      const user = localStorage.getItem('user')
+      if (user) navigate('/medication-input')
+    }
+    checkUserStatus()
 
     const handleStorageChange = (event) => {
-      if (event.key === "user") {
-        checkUserStatus();
+      if (event.key === 'user') {
+        checkUserStatus()
       }
-    };
-    window.addEventListener("storage", handleStorageChange);
+    }
+    window.addEventListener('storage', handleStorageChange)
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, [navigate]);
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
 
   return (
     <div className="app">
-      <div className="overlay"></div>
+      <div className="overlay" />
       <div className="container">
         <div className="heart-container">
           <FaHeartbeat className="large-heart-icon" />
@@ -42,20 +43,20 @@ function Home() {
         <div className="button-group">
           <button
             className="secondary-button"
-            onClick={() => navigate("/register")}
+            onClick={() => navigate('/register')}
           >
             Register
           </button>
           <button
             className="secondary-button"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate('/login')}
           >
             Login
           </button>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Home;
+export default Home

@@ -1,70 +1,70 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false)
+  const navigate = useNavigate()
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setShowSuccessPopup(false);
+    e.preventDefault()
+    setError('')
+    setShowSuccessPopup(false)
     try {
-      const response = await axios.post("v1/auth/login", {
+      const response = await axios.post('v1/auth/login', {
         email,
         password,
-      });
+      })
       if (response.data.tokens && response.data.tokens.access.token) {
-        const { access } = response.data.tokens;
+        const { access } = response.data.tokens
         const user = {
           email,
           token: access.token,
-          name: response.data.user?.name || "User",
-        };
-        localStorage.setItem("user", JSON.stringify(user));
+          name: response.data.user?.name || 'User',
+        }
+        localStorage.setItem('user', JSON.stringify(user))
         window.dispatchEvent(
-          new StorageEvent("storage", {
-            key: "user",
+          new StorageEvent('storage', {
+            key: 'user',
             oldValue: null,
             newValue: user,
           })
-        );
-        setShowSuccessPopup(true);
+        )
+        setShowSuccessPopup(true)
         setTimeout(() => {
-          setShowSuccessPopup(false);
-          navigate("/medication-input");
-        }, 2000);
+          setShowSuccessPopup(false)
+          navigate('/medication-input')
+        }, 2000)
       }
     } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
+      setError(err.response?.data?.message || 'An error occurred')
     }
-  };
+  }
 
   useEffect(() => {
     const checkUserStatus = () => {
-      const user = localStorage.getItem("user");
-      if (user) navigate("/medication-input");
-    };
-    checkUserStatus();
+      const user = localStorage.getItem('user')
+      if (user) navigate('/medication-input')
+    }
+    checkUserStatus()
     const handleStorageChange = (event) => {
-      if (event.key === "user") {
-        checkUserStatus();
+      if (event.key === 'user') {
+        checkUserStatus()
       }
-    };
-    window.addEventListener("storage", handleStorageChange);
+    }
+    window.addEventListener('storage', handleStorageChange)
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, [navigate]);
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [navigate])
 
   return (
     <div className="app">
-      <div className="overlay"></div>
+      <div className="overlay" />
       <div className="container">
         <h2 className="text-2xl font-bold text-black mb-6">Login</h2>
         <form onSubmit={handleLogin} className="w-full flex flex-col px-10">
@@ -86,7 +86,7 @@ function LoginForm() {
               Password:
             </label>
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -117,20 +117,17 @@ function LoginForm() {
           </div>
         )}
         <p className="text-center mt-6">
-          New user?{" "}
+          New user?{' '}
           <button
             className="text-cyan-500 hover:underline"
-            onClick={() => navigate("/register")}
+            onClick={() => navigate('/register')}
           >
             Please register!
           </button>
         </p>
       </div>
     </div>
-  );
+  )
 }
 
-export default LoginForm;
-
-
-
+export default LoginForm
