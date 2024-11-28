@@ -16,9 +16,9 @@ axios.defaults.baseURL = process.env.REACT_APP_BACKEND_API_URL
 function App() {
   return (
     <Router>
-      <div className="app-container" style={appContainerStyle}>
+      <div className="flex flex-col min-h-screen">
         <Header />
-        <div className="content" style={contentStyle}>
+        <div className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<RegisterForm />} />
@@ -35,16 +35,6 @@ function App() {
       </div>
     </Router>
   )
-}
-
-const appContainerStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  minHeight: '100vh',
-}
-
-const contentStyle = {
-  flex: 1,
 }
 
 export default App

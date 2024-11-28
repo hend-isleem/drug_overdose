@@ -24,7 +24,9 @@ describe('InteractionReport Component', () => {
         <InteractionReport />
       </MemoryRouter>
     )
-    expect(screen.getByText(/Drug Interaction Report/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/Drug-Drug Interactions Report/i)
+    ).toBeInTheDocument()
   })
 
   it('displays a message when there are no interactions', () => {
