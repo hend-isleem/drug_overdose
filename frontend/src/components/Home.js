@@ -23,13 +23,13 @@ function Home() {
     <div className="bg-gray-900 flex justify-center items-center font-poppins">
       <div className="text-center text-gray-200 bg-gray-800 rounded-lg shadow-lg w-144 p-10 mt-28">
         <h1 className="text-2xl font-bold mb-8">
-          Welcome to the Drug Interaction Checker
+          Welcome to the Drug-Drug interactions checker
         </h1>
         <p className="text-gray-400 mb-8">
           Easily check for potential interactions between your medications.
         </p>
         <h2 className="text-lg mb-8">
-          Please log in to access the Drug Interaction Checker
+          Please log in to access the DDIs Checker
         </h2>
         <div className="flex justify-center gap-4">
           <Link

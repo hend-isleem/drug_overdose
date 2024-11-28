@@ -1,5 +1,5 @@
 {
-  "name": "drug_overdose",
+  "name": "drugs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -31,7 +31,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {
@@ -46,7 +46,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jest": "^28.9.0",
+    "eslint-plugin-jest": "^25.7.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",

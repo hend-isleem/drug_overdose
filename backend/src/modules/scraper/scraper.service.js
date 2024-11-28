@@ -11,6 +11,7 @@ const getCrawler = (requestHandler, failedRequestHandler) =>
       requestHandlerTimeoutSecs: 5
     },
     new Configuration({
+      persistStorage: false,
       availableMemoryRatio: 1
     })
   )

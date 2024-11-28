@@ -90,7 +90,9 @@ function MedicationInputForm() {
   }
   return (
     <div className="bg-gray-800 rounded-lg shadow-md text-gray-200 text-center w-144 p-10 mt-24 mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Drug Interaction Checker</h2>
+      <h2 className="text-2xl font-bold mb-4">
+        Drug-Drug Interactions Checker
+      </h2>
       <p className="text-gray-400 mb-6">
         Check interactions with multiple drugs.
       </p>

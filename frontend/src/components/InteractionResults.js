@@ -21,7 +21,7 @@ function InteractionReport() {
   return (
     <div className="p-6 bg-gray-900 min-h-screen">
       <h1 className="text-2xl font-bold text-white text-center mb-6">
-        Drug Interaction Report
+        Drug-Drug Interactions Report
       </h1>
       {interactions.length === 0 ? (
         <p className="text-white text-center">
